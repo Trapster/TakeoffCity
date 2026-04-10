@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | TakeoffCity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff4742;
+            --primary-dark: #e63e39;
+            --text-main: #222;
+            --text-muted: #666;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --border: #eee;
+            --success: #2ecc71;
+            --blue: #3182ce;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background: var(--bg-light);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Top bar ── */
+        .topbar { background: white; border-bottom: 1px solid var(--border); }
+        .topbar-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo .accent { color: var(--primary); }
+        .logo .tag {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+        .topbar-right a {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+        .topbar-right a:hover { color: var(--text-main); }
+        .topbar-user { font-weight: 700; font-size: 0.875rem; }
+
+        .btn {
+            padding: 0.45rem 1.1rem;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        /* ── Period selector ── */
+        .period-selector {
+            display: flex;
+            gap: 0.2rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 0.2rem;
+        }
+
+        .period-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.1s;
+        }
+        .period-btn.active { background: var(--primary); color: white; }
+        .period-btn:hover:not(.active) { color: var(--text-main); }
+
+        /* ── Section label ── */
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Stat grid ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .stat-card-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.6rem;
+        }
+
+        .stat-card-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+
+        .stat-card-value.primary { color: var(--primary); }
+        .stat-card-value.success { color: var(--success); }
+        .stat-card-value.blue    { color: var(--blue); }
+
+        .stat-card-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 0.4rem;
+        }
+
+        /* ── Bottom grid ── */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .bottom-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── City bars ── */
+        .city-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.55rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+        .city-row:last-child { border-bottom: none; }
+
+        .city-rank {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            width: 1.25rem;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .city-name { font-weight: 700; flex-shrink: 0; min-width: 80px; }
+
+        .city-bar-wrap {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-light);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .city-bar {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 99px;
+            transition: width 0.4s ease;
+        }
+
+        .city-count {
+            font-weight: 800;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            min-width: 1.5rem;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 1rem 0;
+        }
+
+        .updated-at {
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 1.25rem;
+        }
+
+        .loading { opacity: 0.4; transition: opacity 0.2s; }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="topbar-inner">
+        <a href="/" class="logo">
+            TAKEOFF<span class="accent">CITY</span>
+            <span class="tag">ADMIN</span>
+        </a>
+        <div class="topbar-right">
+            <a href="/dashboard">My Dashboard</a>
+            <span class="topbar-user">{{ username }}</span>
+            <a href="/logout" class="btn btn-primary">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1 class="page-title">Admin Panel</h1>
+        <div class="period-selector">
+            <button class="period-btn" data-period="1h">1H</button>
+            <button class="period-btn active" data-period="1d">1D</button>
+            <button class="period-btn" data-period="5d">5D</button>
+            <button class="period-btn" data-period="30d">30D</button>
+            <button class="period-btn" data-period="1y">1Y</button>
+        </div>
+    </div>
+
+    <!-- All-time stats -->
+    <div class="section-label">All Time</div>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-card-label">Groups Created</div>
+            <div class="stat-card-value" id="s-total-groups">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Unique Users</div>
+            <div class="stat-card-value primary" id="s-unique-users">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Feedback Responses</div>
+            <div class="stat-card-value" id="s-total-feedback">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Calculated</div>
+            <div class="stat-card-value success" id="s-total-calculated">—</div>
+            <div class="stat-card-sub" id="s-calc-pct"></div>
+        </div>
+    </div>
+
+    <!-- Period stats -->
+    <div class="section-label" id="period-label">In Last 1D</div>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-card-label">Groups Created</div>
+            <div class="stat-card-value primary" id="p-groups">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Active Users</div>
+            <div class="stat-card-value blue" id="p-users">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Feedback Submitted</div>
+            <div class="stat-card-value" id="p-feedback">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Groups Calculated</div>
+            <div class="stat-card-value success" id="p-calculated">—</div>
+        </div>
+    </div>
+
+    <!-- Chart + Cities -->
+    <div class="bottom-grid">
+        <div class="panel">
+            <div class="panel-title" id="chart-title">Activity — Last 1D</div>
+            <canvas id="activityChart"></canvas>
+        </div>
+        <div class="panel">
+            <div class="panel-title">Top Origin Cities</div>
+            <div id="cities-list"><div class="empty-state">Loading...</div></div>
+        </div>
+    </div>
+
+    <div class="updated-at" id="updated-at"></div>
+
+</div>
+
+<script>
+    const PERIOD_LABELS = { '1h': '1H', '1d': '1D', '5d': '5D', '30d': '30D', '1y': '1Y' };
+    const TIME_UNITS    = { '1h': 'minute', '1d': 'hour', '5d': 'day', '30d': 'day', '1y': 'month' };
+
+    let currentPeriod = '1d';
+    let chart = null;
+
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // ── Period selector ──────────────────────────────────────────────────────
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentPeriod = btn.dataset.period;
+            loadStats(currentPeriod);
+        });
+    });
+
+    // ── Fetch ────────────────────────────────────────────────────────────────
+    async function loadStats(period) {
+        document.querySelector('.container').classList.add('loading');
+        try {
+            const res = await fetch(`/api/admin/stats?period=${period}`);
+            if (!res.ok) { console.error('Stats fetch failed', res.status); return; }
+            const data = await res.json();
+            renderAll(data, period);
+        } catch (err) {
+            console.error('Error loading stats:', err);
+        } finally {
+            document.querySelector('.container').classList.remove('loading');
+        }
+    }
+
+    // ── Render ───────────────────────────────────────────────────────────────
+    function renderAll(data, period) {
+        const { all_time, period: p, series, top_cities } = data;
+
+        // All-time cards
+        document.getElementById('s-total-groups').textContent     = fmt(all_time.total_groups);
+        document.getElementById('s-unique-users').textContent     = fmt(all_time.unique_users);
+        document.getElementById('s-total-feedback').textContent   = fmt(all_time.total_feedback);
+        document.getElementById('s-total-calculated').textContent = fmt(all_time.total_calculated);
+        const pct = all_time.total_groups > 0
+            ? Math.round((all_time.total_calculated / all_time.total_groups) * 100) + '%'
+            : '—';
+        document.getElementById('s-calc-pct').textContent = `${pct} of all groups`;
+
+        // Period cards
+        const label = PERIOD_LABELS[period];
+        document.getElementById('period-label').textContent    = `In Last ${label}`;
+        document.getElementById('chart-title').textContent     = `Activity — Last ${label}`;
+        document.getElementById('p-groups').textContent        = fmt(p.groups_created);
+        document.getElementById('p-users').textContent         = fmt(p.active_users);
+        document.getElementById('p-feedback').textContent      = fmt(p.feedback_submitted);
+        document.getElementById('p-calculated').textContent    = fmt(p.groups_calculated);
+
+        renderChart(series, period);
+        renderCities(top_cities);
+        document.getElementById('updated-at').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    }
+
+    // ── Chart ────────────────────────────────────────────────────────────────
+    function renderChart(series, period) {
+        const timeUnit = TIME_UNITS[period];
+        const toPoints = arr => arr.map(d => ({ x: d.bucket, y: d.count }));
+
+        const datasets = [
+            {
+                label: 'Groups Created',
+                data: toPoints(series.groups),
+                borderColor: '#ff4742',
+                backgroundColor: 'rgba(255,71,66,0.08)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+            },
+            {
+                label: 'Feedback',
+                data: toPoints(series.feedback),
+                borderColor: '#2ecc71',
+                backgroundColor: 'rgba(46,204,113,0.08)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+            },
+            {
+                label: 'Logins',
+                data: toPoints(series.logins),
+                borderColor: '#3182ce',
+                backgroundColor: 'rgba(49,130,206,0.08)',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+            },
+        ];
+
+        const options = {
+            responsive: true,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: { family: 'Inter', size: 12, weight: '700' },
+                        boxWidth: 10,
+                        padding: 16,
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#222',
+                    titleFont: { family: 'Inter', size: 12, weight: '700' },
+                    bodyFont: { family: 'Inter', size: 12 },
+                    padding: 10,
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: { unit: timeUnit },
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                    ticks: { font: { family: 'Inter', size: 11 }, color: '#999' },
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        font: { family: 'Inter', size: 11 },
+                        color: '#999',
+                        precision: 0,
+                    },
+                    grid: { color: 'rgba(0,0,0,0.04)' },
+                }
+            }
+        };
+
+        if (chart) {
+            chart.data.datasets = datasets;
+            chart.options.scales.x.time.unit = timeUnit;
+            chart.update('active');
+        } else {
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            chart = new Chart(ctx, { type: 'line', data: { datasets }, options });
+        }
+    }
+
+    // ── Cities ───────────────────────────────────────────────────────────────
+    function renderCities(cities) {
+        const el = document.getElementById('cities-list');
+        if (!cities || !cities.length) {
+            el.innerHTML = '<div class="empty-state">No feedback responses yet.</div>';
+            return;
+        }
+        const max = cities[0].count;
+        el.innerHTML = cities.map((c, i) => `
+            <div class="city-row">
+                <span class="city-rank">${i + 1}</span>
+                <span class="city-name">${escHtml(c.city)}</span>
+                <div class="city-bar-wrap">
+                    <div class="city-bar" style="width:${Math.round((c.count / max) * 100)}%"></div>
+                </div>
+                <span class="city-count">${c.count}</span>
+            </div>
+        `).join('');
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    function fmt(n) {
+        if (n == null) return '—';
+        return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
+    }
+
+    // ── Boot ─────────────────────────────────────────────────────────────────
+    loadStats(currentPeriod);
+    setInterval(() => loadStats(currentPeriod), 60 * 1000);
+</script>
+
+</body>
+</html>
