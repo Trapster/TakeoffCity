@@ -1,0 +1,50 @@
+services:
+  db-test:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: testdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser -d testdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend-test:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.test
+    environment:
+      DATABASE_URL: postgresql://testuser:testpassword@db-test:5432/testdb
+    volumes:
+      - ./tests/backend:/app/tests
+      - backend_pytest_cache:/app/.pytest_cache
+    depends_on:
+      db-test:
+        condition: service_healthy
+
+  webapp-test:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile.test
+    environment:
+      SECRET_KEY: test-secret-key
+      BACKEND_URL: http://mock-backend
+    volumes:
+      - ./tests/webapp:/app/tests
+      - webapp_pytest_cache:/app/.pytest_cache
+
+  # Gate: only succeeds when both test suites pass. Use this as the target.
+  all-tests:
+    image: alpine
+    entrypoint: ["echo", "All tests passed"]
+    depends_on:
+      backend-test:
+        condition: service_completed_successfully
+      webapp-test:
+        condition: service_completed_successfully
+
+volumes:
+  backend_pytest_cache:
+  webapp_pytest_cache:
