@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | TakeoffCity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4742;
+            --primary-dark: #e63e39;
+            --text-main: #222;
+            --text-muted: #666;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --border: #eee;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--text-main);
+            letter-spacing: -0.03em;
+        }
+        .logo span { color: var(--primary); }
+
+        nav { display: flex; align-items: center; gap: 1.5rem; }
+        nav a { text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; }
+        nav a:hover { color: var(--primary); }
+
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.1s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-primary { background-color: var(--primary); color: var(--white); }
+        .btn-primary:hover { background-color: var(--primary-dark); }
+        .btn-danger { background-color: var(--danger); color: var(--white); }
+        .btn-danger:hover { background-color: #c0392b; }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.75rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1.25rem;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-danger {
+            border-color: #fecaca;
+            background: #fff8f8;
+        }
+
+        .card-danger h2 { color: var(--danger); }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group:last-of-type { margin-bottom: 1.25rem; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-control[readonly] {
+            background: var(--bg-light);
+            color: var(--text-muted);
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .meta-row:last-child { border-bottom: none; }
+        .meta-label { font-weight: 600; color: var(--text-muted); }
+        .meta-value { font-weight: 700; }
+
+        .flash {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .flash-success { background: #e6fffa; color: #1a8a5e; border: 1px solid #b2f0d8; }
+        .flash-error { background: #fff5f5; color: var(--primary); border: 1px solid #ffe3e3; }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Delete confirmation modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="/" class="logo">TAKEOFF<span>CITY</span></a>
+            <nav>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">Account Settings</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Account Info -->
+        <div class="card">
+            <h2>Your Account</h2>
+            <div class="meta-row">
+                <span class="meta-label">Username</span>
+                <span class="meta-value">{{ user_data.get('username', username) }}</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">Email</span>
+                <span class="meta-value">{{ user_data.get('email', '—') }}</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">Member since</span>
+                <span class="meta-value">{{ user_data.get('member_since', '—')[:10] }}</span>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="card">
+            <h2>Change Password</h2>
+            <form action="/settings/password" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" name="current_password" class="form-control" required autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password" id="newPassword" class="form-control" required minlength="8" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" name="confirm_password" id="confirmPassword" class="form-control" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="return checkPasswordMatch()">Update Password</button>
+            </form>
+        </div>
+
+        <!-- Change Email -->
+        <div class="card">
+            <h2>Change Email</h2>
+            <form action="/settings/email" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label>New Email</label>
+                    <input type="email" name="new_email" class="form-control" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label>Confirm with Password</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary">Update Email</button>
+            </form>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="card card-danger">
+            <h2>Danger Zone</h2>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                Permanently deletes your account and all event groups you created. This cannot be undone.
+                Per our <a href="/privacy" style="color: var(--primary);">Privacy Policy</a>, all your personal data will be erased.
+            </p>
+            <button onclick="document.getElementById('deleteModal').style.display='flex'" class="btn btn-danger">Delete My Account</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 0.5rem; color: var(--danger);">Delete Account</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                This will permanently delete your account and all your event groups. Enter your password to confirm.
+            </p>
+            <form action="/settings/delete" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="current-password" placeholder="Your current password">
+                </div>
+                <button type="submit" class="btn btn-danger" style="width: 100%;">Yes, delete my account</button>
+            </form>
+            <button onclick="document.getElementById('deleteModal').style.display='none'" class="btn" style="width: 100%; margin-top: 0.5rem; background: #eee;">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function checkPasswordMatch() {
+            const pw = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            if (pw !== confirm) {
+                alert('New passwords do not match.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+</body>
+</html>
