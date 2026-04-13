@@ -1,4 +1,7 @@
+import os
 from unittest.mock import patch, MagicMock
+
+ADMIN_USER = os.environ["WEB_ADMIN_USERNAME"]
 
 
 def _mock_response(status=200, content=b'{"ok":true}', content_type="application/json"):
@@ -16,11 +19,11 @@ def test_proxy_blocks_internal_paths(client):
 
 def test_proxy_injects_username_header(client):
     with client.session_transaction() as sess:
-        sess["username"] = "jame"
+        sess["username"] = ADMIN_USER
     with patch("app.http_client.request", return_value=_mock_response()) as mock_req:
         client.get("/api/events")
     _, kwargs = mock_req.call_args
-    assert kwargs["headers"]["X-Username"] == "jame"
+    assert kwargs["headers"]["X-Username"] == ADMIN_USER
 
 
 def test_proxy_injects_empty_username_when_unauthenticated(client):
@@ -50,3 +53,11 @@ def test_proxy_passes_through_status_code(client):
     with patch("app.http_client.request", return_value=_mock_response(status=404)):
         r = client.get("/api/events/missing")
     assert r.status_code == 404
+
+
+def test_proxy_forwards_cities_search(client):
+    with patch("app.http_client.request", return_value=_mock_response(content=b'{"cities":[]}')) as mock_req:
+        r = client.get("/api/cities/search?q=London")
+    assert r.status_code == 200
+    args, _ = mock_req.call_args
+    assert "cities/search" in args[1]

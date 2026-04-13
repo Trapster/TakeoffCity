@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TakeoffCity | Gathering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@600;700&family=Jost:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:           #F8F5F0;
+            --surface:      #FFFFFF;
+            --surface-2:    #F3EFE9;
+            --surface-3:    #EDE8E1;
+            --border:        rgba(28,24,20,0.09);
+            --border-strong: rgba(28,24,20,0.16);
+            --text:       #1C1814;
+            --text-dim:   rgba(28,24,20,0.65);
+            --text-muted: rgba(28,24,20,0.38);
+            --accent:      #0d4c3c;
+            --accent-dark: #0a3d30;
+            --accent-dim:  rgba(13,76,60,0.10);
+            --green:     #2D7D56;
+            --green-dim: rgba(45,125,86,0.10);
+            --blue:      #3A6EA8;
+            --danger:    #C0392B;
+            --danger-dim: rgba(192,57,43,0.10);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Jost', -apple-system, sans-serif;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(248,245,240,0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .logo {
+            font-family: 'Cormorant', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .logo span { color: var(--accent); }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.15s;
+        }
+        nav a:hover { color: var(--text); }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 99px;
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            transition: all 0.15s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            background: var(--surface-2);
+            border: 1px solid var(--border-strong);
+            color: var(--text-dim);
+        }
+        .btn-ghost:hover { background: var(--surface-3); color: var(--text); }
+
+        .btn-danger {
+            background: var(--danger-dim);
+            border: 1px solid rgba(192,57,43,0.22);
+            color: var(--danger);
+            font-size: 0.78rem;
+            padding: 0.3rem 0.75rem;
+        }
+        .btn-danger:hover { background: rgba(192,57,43,0.18); }
+
+        .btn-cancel {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn-cancel:hover { color: var(--text); background: var(--surface-3); }
+
+        /* ── Flash bar ── */
+        .flash-bar {
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+            padding: 0.65rem 1.5rem;
+            text-align: center;
+        }
+        .flash-bar .error   { font-weight: 600; font-size: 0.875rem; color: var(--danger); }
+        .flash-bar .success { font-weight: 600; font-size: 0.875rem; color: var(--green); }
+
+        /* ── Forms ── */
+        .form-group { margin-bottom: 1rem; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--text-muted);
+            font-family: 'Jost', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.93rem;
+            background: var(--surface-2);
+            color: var(--text);
+            transition: border-color 0.15s;
+        }
+        .form-control:focus { outline: none; border-color: var(--accent); }
+        .form-control::placeholder { color: var(--text-muted); }
+
+        input[type="checkbox"] { accent-color: var(--accent); }
+
+        /* ── Modals ── */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(28,24,20,0.58);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(28,24,20,0.15);
+        }
+
+        .modal-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .modal-sub {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .modal-link {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .modal-link:hover { text-decoration: underline; }
+
+        /* ── CalendarPicker ── */
+        .cal-wrapper { user-select: none; }
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        .cal-header-title {
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .cal-nav-btn {
+            background: none;
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            width: 28px; height: 28px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            display: flex; align-items: center; justify-content: center;
+            line-height: 1; padding: 0;
+        }
+        .cal-nav-btn:disabled { opacity: 0.3; cursor: default; }
+        .cal-nav-btn:not(:disabled):hover { background: var(--surface-2); }
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .cal-dow {
+            text-align: center;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.25rem 0;
+            font-family: 'Jost', sans-serif;
+        }
+        .cal-day {
+            text-align: center;
+            padding: 0.35rem 0.2rem;
+            border-radius: 5px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: background 0.1s;
+        }
+        .cal-day:hover:not(.out-of-range):not(.empty) { background: var(--surface-2); }
+        .cal-day.empty, .cal-day.out-of-range { background: none; cursor: default; }
+        .cal-day.out-of-range { color: var(--text-muted); opacity: 0.4; }
+        .cal-day.selected { background: var(--accent); color: #fff; }
+        .cal-selected-summary {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+            min-height: 1.4em;
+            font-family: 'DM Mono', monospace;
+        }
+
+        /* ── City autocomplete ── */
+        .city-dropdown-item {
+            padding: 0.6rem 0.9rem;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.1s;
+        }
+        .city-dropdown-item:last-child { border-bottom: none; }
+        .city-dropdown-item:hover,
+        .city-dropdown-item.active { background: var(--surface-2); }
+        .city-dropdown-item .city-country {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: 0.4rem;
+            font-family: 'DM Mono', monospace;
+        }
+
+        /* ── Calculation log ── */
+        #calculation-log {
+            background: var(--surface-2);
+            color: var(--text-dim);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-strong);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            min-height: 130px;
+            white-space: pre-wrap;
+            line-height: 1.75;
+        }
+
+        /* ── Group page layout ── */
+        .group-main {
+            padding: 3rem 0 5rem;
+        }
+
+        /* Event info card */
+        .event-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.75rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-eyebrow {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-family: 'Jost', sans-serif;
+        }
+
+        .event-name {
+            font-family: 'Cormorant', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.1;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .event-pill {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-family: 'DM Mono', monospace;
+        }
+
+        /* Owner section */
+        .section-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+        }
+
+        .owner-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .response-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .response-row {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .response-info { flex: 1; min-width: 0; }
+
+        .response-identifier {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--text);
+            margin-bottom: 0.2rem;
+            font-family: 'DM Mono', monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .response-detail {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 0.15rem;
+        }
+
+        .response-dates {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'DM Mono', monospace;
+            margin-top: 0.2rem;
+        }
+
+        .response-empty {
+            background: var(--surface-2);
+            border: 1px dashed var(--border-strong);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Attendee form section */
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.75rem 2rem;
+        }
+
+        .form-card-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-card-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            line-height: 1.65;
+        }
+
+        .identity-badge {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .divider {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin: 0.75rem 0;
+        }
+
+        /* Edit link panel */
+        .edit-link-panel {
+            background: var(--green-dim);
+            border: 1px solid rgba(45,125,86,0.22);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .edit-link-title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--green);
+            margin-bottom: 0.3rem;
+        }
+
+        .edit-link-sub {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .edit-link-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .edit-link-input {
+            flex: 1;
+            padding: 0.55rem 0.75rem;
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            background: var(--surface);
+            color: var(--text);
+            min-width: 0;
+        }
+
+        .edit-link-warning {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.6rem;
+            font-style: italic;
+        }
+
+        /* Success state */
+        .success-state {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .success-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .success-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-sub {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        /* Loading state */
+        .loading-state {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* ── Results section ── */
+        #resultsSection { margin-top: 2.5rem; }
+
+        .results-eyebrow {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-family: 'Jost', sans-serif;
+        }
+
+        .results-heading {
+            font-family: 'Cormorant', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+        }
+
+        .strategy-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .strategy-tab {
+            padding: 0.45rem 1.1rem;
+            border-radius: 99px;
+            border: 1px solid var(--border-strong);
+            background: var(--surface-2);
+            color: var(--text-dim);
+            font-family: 'Jost', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .strategy-tab:hover { background: var(--surface-3); color: var(--text); }
+        .strategy-tab.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .dest-cards { display: flex; flex-direction: column; gap: 1.25rem; }
+
+        .dest-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem 1.75rem;
+            position: relative;
+        }
+
+        .dest-rank-badge {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-radius: 99px;
+            padding: 0.2rem 0.65rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .dest-city {
+            font-family: 'Cormorant', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.1;
+            margin-bottom: 0.2rem;
+        }
+
+        .dest-country {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 0.75rem;
+        }
+
+        .dest-coverage-pill {
+            display: inline-block;
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(45,125,86,0.22);
+            border-radius: 99px;
+            padding: 0.2rem 0.65rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'Jost', sans-serif;
+            margin-bottom: 1rem;
+        }
+        .dest-coverage-pill.partial {
+            background: var(--danger-dim);
+            color: var(--danger);
+            border-color: rgba(192,57,43,0.22);
+        }
+
+        .dest-person-rows { margin-bottom: 1rem; }
+
+        .dest-person-row {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            padding: 0.45rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+        .dest-person-row:last-child { border-bottom: none; }
+
+        .dest-person-name {
+            font-weight: 600;
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+            flex: 0 0 auto;
+            min-width: 7rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .dest-person-city  { color: var(--text-muted); font-size: 0.78rem; flex: 1 1 auto; }
+        .dest-person-price { font-weight: 700; color: var(--accent); font-family: 'DM Mono', monospace; flex: 0 0 auto; }
+        .dest-person-stops { font-size: 0.75rem; color: var(--text-muted); font-family: 'DM Mono', monospace; flex: 0 0 auto; }
+        .dest-person-unreachable { color: var(--text-muted); font-style: italic; font-size: 0.8rem; }
+
+        .dest-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .dest-total {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--text-dim);
+        }
+        .dest-total strong { color: var(--text); }
+
+        .fairness-callout {
+            background: rgba(200,140,40,0.10);
+            border: 1px solid rgba(200,140,40,0.28);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #7a5c00;
+            line-height: 1.6;
+        }
+        .fairness-callout strong { color: #5c4400; }
+
+        .bottleneck-panel {
+            background: var(--surface-2);
+            border: 1px solid var(--border-strong);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+        .bottleneck-panel strong { color: var(--text); }
+
+        .results-empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: var(--surface);
+            border: 1px dashed var(--border-strong);
+            border-radius: 14px;
+        }
+        .results-empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+        .results-empty-state h3 {
+            font-family: 'Cormorant', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        .results-empty-state p { color: var(--text-dim); font-size: 0.875rem; line-height: 1.65; }
+
+        @media (max-width: 600px) {
+            .owner-actions { flex-direction: column; }
+            .owner-actions .btn { width: 100%; text-align: center; }
+            .response-row { flex-direction: column; gap: 0.75rem; }
+            .event-card, .form-card { padding: 1.25rem; }
+            .dest-card { padding: 1.25rem; }
+            .dest-city { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-bar">
+            {% for category, message in messages %}
+                <span class="{{ category }}">{{ message }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<header>
+    <div class="header-inner">
+        <a href="/" class="logo">Takeoff<span>City</span></a>
+        <nav>
+            {% if username %}
+                <a href="/dashboard" style="color: var(--accent); font-weight: 600;">My Gatherings</a>
+                <span style="font-weight: 500; font-size: 0.875rem; color: var(--text-muted);">{{ username }}</span>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="#" onclick="showLogin()" class="btn btn-primary">Sign In</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main class="group-main">
+    <div class="container">
+        <div id="loadingState" class="loading-state">Loading gathering details…</div>
+
+        <!-- Event info card (always shown once loaded) -->
+        <div id="eventCard" class="event-card" style="display: none;">
+            <div class="event-eyebrow">Gathering</div>
+            <div id="eventName" class="event-name"></div>
+            <div class="event-meta" id="eventMeta"></div>
+        </div>
+
+        <!-- Results section (visible to both owner and attendee once calculated) -->
+        <div id="resultsSection" style="display: none;"></div>
+
+        <!-- Owner view -->
+        <div id="ownerSection" style="display: none;">
+            <div class="owner-actions">
+                <button onclick="copyShareLink()" class="btn btn-ghost">Copy Share Link</button>
+                <button onclick="triggerCalculation()" class="btn btn-primary" style="padding: 0.6rem 1.5rem;">Calculate Best Destination</button>
+            </div>
+
+            <div class="section-title">Responses (<span id="responseCount">0</span>)</div>
+            <div id="responseList" class="response-list">
+                <div class="response-empty">No responses yet. Share the link with your group.</div>
+            </div>
+        </div>
+
+        <!-- Attendee view -->
+        <div id="attendeeSection" style="display: none;">
+            <!-- Step 1: Identity gate -->
+            <div id="attendeeStep1" class="form-card">
+                <div class="form-card-title">You're Invited</div>
+                <div class="form-card-subtitle">
+                    To submit your travel details and be able to update them later, please sign in or provide your email address.
+                </div>
+                <button onclick="openLoginFromGroup()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem; padding: 0.8rem;">Sign in or create account</button>
+                <div class="divider">— or continue with email —</div>
+                <div class="form-group" style="margin-top: 0.75rem;">
+                    <label>Email address</label>
+                    <input type="email" id="attendeeEmail" class="form-control" placeholder="you@example.com" autocomplete="email">
+                </div>
+                <button onclick="proceedWithEmail()" class="btn btn-primary" style="width: 100%;">Continue</button>
+            </div>
+
+            <!-- Step 2: Response form -->
+            <div id="attendeeStep2" class="form-card" style="display: none;">
+                <div class="form-card-title" id="formTitle">Your Travel Details</div>
+                <div class="form-card-subtitle" id="formSubtitle">Fill in the details below. The organiser will use this to find the best destination for everyone.</div>
+                <div id="identityBadge" class="identity-badge" style="display: none;"></div>
+
+                <div class="form-group">
+                    <label>Departure City</label>
+                    <div id="cityAutocompleteWrapper" style="position: relative;">
+                        <input type="text" id="feedbackCityInput" class="form-control" placeholder="e.g. London" autocomplete="off">
+                        <input type="hidden" id="feedbackCityValue">
+                        <div id="cityDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: 0 8px 24px rgba(28,24,20,0.10); z-index: 3000; max-height: 220px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Adults</label>
+                        <input type="number" id="feedbackAdults" class="form-control" value="1" min="1">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Children</label>
+                        <input type="number" id="feedbackChildren" class="form-control" value="0" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Available Dates</label>
+                    <div id="feedbackCalendarContainer"></div>
+                </div>
+
+                <button onclick="submitResponse()" id="submitBtn" class="btn btn-primary" style="width: 100%; padding: 0.9rem; margin-top: 0.5rem;">Confirm My Details</button>
+                <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">Your response helps everyone arrive with ease.</p>
+            </div>
+
+            <!-- Success + edit link panel (shown after submission) -->
+            <div id="attendeeSuccess" style="display: none;">
+                <div class="form-card">
+                    <div class="success-state">
+                        <div class="success-icon">✓</div>
+                        <div class="success-title">Details received</div>
+                        <div class="success-sub">Thank you — the organiser has been notified.</div>
+                    </div>
+                    <div id="editLinkPanel" class="edit-link-panel" style="display: none;">
+                        <div class="edit-link-title">Save your edit link</div>
+                        <div class="edit-link-sub">This is the only time this link will be shown. Bookmark it to update your response in the future.</div>
+                        <div class="edit-link-row">
+                            <input type="text" id="editLinkInput" class="edit-link-input" readonly>
+                            <button onclick="copyEditLink()" class="btn btn-ghost" style="white-space: nowrap; flex-shrink: 0;">Copy</button>
+                        </div>
+                        <div class="edit-link-warning">This link gives direct access to your response — keep it private.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Sign In</h2>
+        <form action="/login" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="return_to" value="/group/{{ group_id }}">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="your_username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+        <p class="modal-sub">No account? <a href="#" onclick="switchToSignup()" class="modal-link">Sign up</a></p>
+        <button onclick="hideLogin()" class="btn btn-cancel">Cancel</button>
+    </div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Create Account</h2>
+        <form action="/signup" method="POST" onsubmit="return validateSignup(this)">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="return_to" value="/group/{{ group_id }}">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="your_username" required autocomplete="username" pattern="[A-Za-z0-9_\-]{3,30}" title="3–30 characters: letters, numbers, _ or -">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" id="signupPassword" class="form-control" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" id="signupConfirm" class="form-control" placeholder="Repeat password" required autocomplete="new-password">
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <input type="checkbox" id="tosCheckbox" required style="margin-top: 0.25rem; width: auto; flex-shrink: 0;">
+                <label for="tosCheckbox" style="font-weight: 400; font-size: 0.82rem; color: var(--text-dim); cursor: pointer; text-transform: none; letter-spacing: 0;">
+                    I agree to the <a href="/terms" target="_blank" class="modal-link">Terms of Service</a> and <a href="/privacy" target="_blank" class="modal-link">Privacy Policy</a>.
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+        </form>
+        <p class="modal-sub">Already have an account? <a href="#" onclick="switchToLogin()" class="modal-link">Sign in</a></p>
+        <button onclick="hideSignup()" class="btn btn-cancel">Cancel</button>
+    </div>
+</div>
+
+<!-- Calculation Modal -->
+<div id="calculationModal" class="modal">
+    <div class="modal-content" style="max-width: 520px;">
+        <h2 class="modal-title">Finding Your Destination</h2>
+        <p style="color: var(--text-dim); font-size: 0.875rem; margin-bottom: 1rem;">Searching connections and fares for your group — this takes just a moment.</p>
+        <div id="calculation-log"></div>
+        <button id="calcCloseBtn" onclick="hideCalculation()" class="btn btn-cancel" style="margin-top: 1rem; display: none;">Close</button>
+    </div>
+</div>
+
+<script>
+    const CURRENT_USER = {{ username | tojson }};
+    const EVENT_ID     = {{ group_id | tojson }};
+
+    // ── State ──────────────────────────────────────────────────────────────────
+    let currentEvent     = null;
+    let feedbackCalPicker = null;
+    let pendingEmail      = null;
+    let isEditMode        = false;
+    let editToken         = null;
+
+    // ── CalendarPicker ─────────────────────────────────────────────────────────
+    class CalendarPicker {
+        constructor(containerEl, minDate, maxDate) {
+            this._container = containerEl;
+            this._min = minDate;
+            this._max = maxDate;
+            this._selected = new Set();
+            this._cursor = new Date(minDate + 'T00:00:00');
+            this._cursor.setDate(1);
+            this._dragging = false;
+            this._dragAnchor = null;
+            this._dragMode = null;
+            this._dragPending = new Set();
+            this._mouseUpHandler = () => {
+                if (!this._dragging) return;
+                this._dragging = false;
+                this._dragPending.forEach(d => {
+                    if (this._dragMode === 'add') this._selected.add(d);
+                    else this._selected.delete(d);
+                });
+                this._dragPending.clear();
+                this._render();
+            };
+            document.addEventListener('mouseup',  this._mouseUpHandler);
+            document.addEventListener('touchend', this._mouseUpHandler);
+            this._render();
+        }
+
+        _iso(d) { return d.toISOString().slice(0, 10); }
+        _inRange(iso) { return iso >= this._min && iso <= this._max; }
+
+        _render() {
+            this._container.innerHTML = '';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'cal-wrapper';
+
+            const header = document.createElement('div');
+            header.className = 'cal-header';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'cal-nav-btn';
+            prevBtn.textContent = '‹';
+            prevBtn.type = 'button';
+            const prevMonthEnd = new Date(this._cursor.getFullYear(), this._cursor.getMonth(), 0);
+            if (this._iso(prevMonthEnd) < this._min) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.addEventListener('click', () => {
+                    this._cursor.setMonth(this._cursor.getMonth() - 1);
+                    this._render();
+                });
+            }
+
+            const title = document.createElement('div');
+            title.className = 'cal-header-title';
+            title.textContent = this._cursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'cal-nav-btn';
+            nextBtn.textContent = '›';
+            nextBtn.type = 'button';
+            const nextMonthStart = new Date(this._cursor.getFullYear(), this._cursor.getMonth() + 1, 1);
+            if (this._iso(nextMonthStart) > this._max) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.addEventListener('click', () => {
+                    this._cursor.setMonth(this._cursor.getMonth() + 1);
+                    this._render();
+                });
+            }
+
+            header.appendChild(prevBtn);
+            header.appendChild(title);
+            header.appendChild(nextBtn);
+            wrapper.appendChild(header);
+
+            const grid = document.createElement('div');
+            grid.className = 'cal-grid';
+            ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'cal-dow';
+                el.textContent = d;
+                grid.appendChild(el);
+            });
+
+            const year = this._cursor.getFullYear();
+            const month = this._cursor.getMonth();
+            const firstDow = new Date(year, month, 1).getDay();
+            for (let i = 0; i < firstDow; i++) {
+                const el = document.createElement('div');
+                el.className = 'cal-day empty';
+                grid.appendChild(el);
+            }
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let d = 1; d <= daysInMonth; d++) {
+                const iso = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.textContent = d;
+                el.dataset.iso = iso;
+                if (!this._inRange(iso)) {
+                    el.classList.add('out-of-range');
+                } else {
+                    if (this._selected.has(iso)) el.classList.add('selected');
+                    const _startDrag = (e) => {
+                        e.preventDefault();
+                        this._dragging = true;
+                        this._dragAnchor = iso;
+                        this._dragMode = this._selected.has(iso) ? 'remove' : 'add';
+                        this._dragPending = new Set([iso]);
+                        this._renderDayStates();
+                    };
+                    el.addEventListener('mousedown', _startDrag);
+                    el.addEventListener('touchstart', _startDrag, { passive: false });
+                    el.addEventListener('mouseover', () => {
+                        if (this._dragging) this._applyDrag(iso);
+                    });
+                    el.addEventListener('touchmove', (e) => {
+                        if (!this._dragging) return;
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if (target && target.dataset.iso) this._applyDrag(target.dataset.iso);
+                    }, { passive: false });
+                }
+                grid.appendChild(el);
+            }
+            wrapper.appendChild(grid);
+
+            const summary = document.createElement('div');
+            summary.className = 'cal-selected-summary';
+            const periods = this.getSelectedPeriods();
+            summary.textContent = periods.length
+                ? periods.map(p => p.start === p.end ? p.start : `${p.start} – ${p.end}`).join(', ')
+                : 'Click or drag to select available dates';
+            wrapper.appendChild(summary);
+
+            this._container.appendChild(wrapper);
+        }
+
+        _applyDrag(iso) {
+            const [a, b] = [this._dragAnchor, iso].sort();
+            const pending = new Set();
+            const cur = new Date(a + 'T00:00:00');
+            const end = new Date(b + 'T00:00:00');
+            while (cur <= end) {
+                const curIso = this._iso(cur);
+                if (this._inRange(curIso)) pending.add(curIso);
+                cur.setDate(cur.getDate() + 1);
+            }
+            this._dragPending = pending;
+            this._renderDayStates();
+        }
+
+        _renderDayStates() {
+            this._container.querySelectorAll('.cal-day[data-iso]').forEach(cell => {
+                const iso = cell.dataset.iso;
+                const inPending = this._dragPending && this._dragPending.has(iso);
+                const selected = inPending ? this._dragMode === 'add' : this._selected.has(iso);
+                cell.classList.toggle('selected', selected);
+            });
+        }
+
+        getSelectedPeriods() {
+            const sorted = Array.from(this._selected).sort();
+            if (!sorted.length) return [];
+            const periods = [];
+            let start = sorted[0], prev = sorted[0];
+            for (let i = 1; i < sorted.length; i++) {
+                const cur = sorted[i];
+                const nxt = new Date(prev + 'T00:00:00');
+                nxt.setDate(nxt.getDate() + 1);
+                if (cur === this._iso(nxt)) {
+                    prev = cur;
+                } else {
+                    periods.push({ start, end: prev });
+                    start = cur; prev = cur;
+                }
+            }
+            periods.push({ start, end: prev });
+            return periods;
+        }
+
+        setSelectedFromPeriods(periods) {
+            this._selected.clear();
+            if (!periods) return;
+            for (const p of periods) {
+                const cur = new Date(p.start + 'T00:00:00');
+                const end = new Date(p.end   + 'T00:00:00');
+                while (cur <= end) {
+                    this._selected.add(this._iso(cur));
+                    cur.setDate(cur.getDate() + 1);
+                }
+            }
+            this._render();
+        }
+
+        reset() {
+            this._selected.clear();
+            this._cursor = new Date(this._min + 'T00:00:00');
+            this._cursor.setDate(1);
+            this._render();
+        }
+
+        destroy() {
+            document.removeEventListener('mouseup',  this._mouseUpHandler);
+            document.removeEventListener('touchend', this._mouseUpHandler);
+            this._container.innerHTML = '';
+        }
+    }
+
+    // ── City autocomplete ──────────────────────────────────────────────────────
+    function initCityAutocomplete(inputId, hiddenId, dropdownId, wrapperId) {
+        const input    = document.getElementById(inputId);
+        const hidden   = document.getElementById(hiddenId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!input || !dropdown) return;
+
+        let searchTimer = null;
+        let activeIndex = -1;
+
+        input.addEventListener('input', () => {
+            const q = input.value.trim();
+            hidden.value = '';
+            clearTimeout(searchTimer);
+            if (q.length < 2) { closeDropdown(); return; }
+            searchTimer = setTimeout(() => fetchCities(q), 280);
+        });
+
+        input.addEventListener('keydown', (e) => {
+            const items = dropdown.querySelectorAll('.city-dropdown-item');
+            if (!items.length) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, items.length - 1);
+                updateActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                updateActive(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeIndex >= 0) items[activeIndex].click();
+            } else if (e.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById(wrapperId);
+            if (wrapper && !wrapper.contains(e.target)) closeDropdown();
+        });
+
+        async function fetchCities(q) {
+            try {
+                const res = await fetch(`/api/cities/search?q=${encodeURIComponent(q)}`);
+                if (!res.ok) { closeDropdown(); return; }
+                const data = await res.json();
+                renderDropdown(data.cities || []);
+            } catch { closeDropdown(); }
+        }
+
+        function renderDropdown(cities) {
+            dropdown.innerHTML = '';
+            activeIndex = -1;
+            if (!cities.length) { closeDropdown(); return; }
+            cities.forEach(city => {
+                const item = document.createElement('div');
+                item.className = 'city-dropdown-item';
+                item.appendChild(document.createTextNode(city.name));
+                const cc = document.createElement('span');
+                cc.className = 'city-country';
+                cc.textContent = city.country_code;
+                item.appendChild(cc);
+                item.addEventListener('click', () => {
+                    input.value  = city.name;
+                    hidden.value = city.name;
+                    closeDropdown();
+                });
+                dropdown.appendChild(item);
+            });
+            dropdown.style.display = 'block';
+        }
+
+        function updateActive(items) {
+            items.forEach((item, i) => item.classList.toggle('active', i === activeIndex));
+        }
+
+        function closeDropdown() {
+            dropdown.style.display = 'none';
+            activeIndex = -1;
+        }
+    }
+
+    // ── Auth modals ────────────────────────────────────────────────────────────
+    function showLogin()     { document.getElementById('loginModal').style.display  = 'flex'; }
+    function hideLogin()     { document.getElementById('loginModal').style.display  = 'none'; }
+    function showSignup()    { document.getElementById('signupModal').style.display = 'flex'; }
+    function hideSignup()    { document.getElementById('signupModal').style.display = 'none'; }
+    function switchToSignup(){ hideLogin();  showSignup(); }
+    function switchToLogin() { hideSignup(); showLogin();  }
+
+    function validateSignup(form) {
+        const pw = document.getElementById('signupPassword').value;
+        const cf = document.getElementById('signupConfirm').value;
+        if (pw !== cf) { alert('Passwords do not match.'); return false; }
+        return true;
+    }
+
+    function openLoginFromGroup() {
+        showLogin();
+    }
+
+    // ── Render helpers ─────────────────────────────────────────────────────────
+    function renderEventCard(event) {
+        document.getElementById('eventName').textContent = event.name;
+
+        const meta = document.getElementById('eventMeta');
+        meta.innerHTML = '';
+
+        const datePill = document.createElement('div');
+        datePill.className = 'event-pill';
+        datePill.textContent = `${event.earliest_date} → ${event.latest_date}`;
+        meta.appendChild(datePill);
+
+        if (event.min_days || event.max_days) {
+            const lengthPill = document.createElement('div');
+            lengthPill.className = 'event-pill';
+            if (event.min_days && event.max_days) {
+                lengthPill.textContent = `${event.min_days}–${event.max_days} day trip`;
+            } else if (event.min_days) {
+                lengthPill.textContent = `min ${event.min_days} days`;
+            } else {
+                lengthPill.textContent = `max ${event.max_days} days`;
+            }
+            meta.appendChild(lengthPill);
+        }
+
+        document.getElementById('eventCard').style.display = 'block';
+    }
+
+    // ── Owner view ─────────────────────────────────────────────────────────────
+    async function renderOwnerView(event) {
+        document.getElementById('ownerSection').style.display = 'block';
+        await loadResponses(event.id);
+    }
+
+    async function loadResponses(eventId) {
+        try {
+            const res = await fetch(`/api/events/${eventId}/responses`);
+            if (!res.ok) throw new Error('Failed to load');
+            const rows = await res.json();
+            renderResponseList(rows);
+        } catch (e) {
+            document.getElementById('responseList').innerHTML =
+                '<div class="response-empty">Unable to load responses.</div>';
+        }
+    }
+
+    function renderResponseList(rows) {
+        document.getElementById('responseCount').textContent = rows.length;
+        const list = document.getElementById('responseList');
+        if (!rows.length) {
+            list.innerHTML = '<div class="response-empty">No responses yet. Share the link with your group.</div>';
+            return;
+        }
+        list.innerHTML = '';
+        rows.forEach(r => {
+            const row = document.createElement('div');
+            row.className = 'response-row';
+            row.id = `response-${r.id}`;
+
+            const info = document.createElement('div');
+            info.className = 'response-info';
+
+            const ident = document.createElement('div');
+            ident.className = 'response-identifier';
+            ident.textContent = r.identifier;
+            info.appendChild(ident);
+
+            const detail = document.createElement('div');
+            detail.className = 'response-detail';
+            const party = r.children > 0 ? `${r.adults} adult${r.adults !== 1 ? 's' : ''}, ${r.children} child${r.children !== 1 ? 'ren' : ''}` : `${r.adults} adult${r.adults !== 1 ? 's' : ''}`;
+            detail.textContent = `${r.city}  ·  ${party}`;
+            info.appendChild(detail);
+
+            if (r.availability_periods) {
+                try {
+                    const periods = JSON.parse(r.availability_periods);
+                    if (periods.length) {
+                        const dates = document.createElement('div');
+                        dates.className = 'response-dates';
+                        dates.textContent = periods.map(p => p.start === p.end ? p.start : `${p.start} – ${p.end}`).join('  ·  ');
+                        info.appendChild(dates);
+                    }
+                } catch {}
+            }
+
+            row.appendChild(info);
+
+            const del = document.createElement('button');
+            del.className = 'btn btn-danger';
+            del.textContent = 'Remove';
+            del.onclick = () => deleteResponse(EVENT_ID, r.id);
+            row.appendChild(del);
+
+            list.appendChild(row);
+        });
+    }
+
+    async function deleteResponse(eventId, feedbackId) {
+        if (!confirm('Remove this response? This cannot be undone.')) return;
+        try {
+            const res = await fetch(`/api/events/${eventId}/responses/${feedbackId}`, { method: 'DELETE' });
+            if (res.ok) {
+                const row = document.getElementById(`response-${feedbackId}`);
+                if (row) row.remove();
+                const remaining = document.querySelectorAll('.response-row').length;
+                document.getElementById('responseCount').textContent = remaining;
+                if (!remaining) {
+                    document.getElementById('responseList').innerHTML =
+                        '<div class="response-empty">No responses yet. Share the link with your group.</div>';
+                }
+            } else {
+                alert('Failed to remove response.');
+            }
+        } catch (e) {
+            alert('Error: ' + e.message);
+        }
+    }
+
+    function copyShareLink() {
+        const link = `${window.location.origin}/group/${EVENT_ID}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(link).then(() => alert('Share link copied!'));
+        } else {
+            prompt('Copy this link:', link);
+        }
+    }
+
+    // ── Calculation ────────────────────────────────────────────────────────────
+    function hideCalculation() { document.getElementById('calculationModal').style.display = 'none'; }
+
+    async function triggerCalculation() {
+        const log      = document.getElementById('calculation-log');
+        const closeBtn = document.getElementById('calcCloseBtn');
+        log.textContent = '';
+        closeBtn.style.display = 'none';
+        document.getElementById('calculationModal').style.display = 'flex';
+        try {
+            const calcRes = await fetch(`/api/calculate/${EVENT_ID}`, { method: 'POST' });
+            const reader  = calcRes.body.getReader();
+            const decoder = new TextDecoder();
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                log.textContent += decoder.decode(value);
+                log.scrollTop = log.scrollHeight;
+            }
+        } catch (err) {
+            log.textContent += `\nError: ${err.message}`;
+        } finally {
+            closeBtn.style.display = 'block';
+            setTimeout(async () => {
+                document.getElementById('calculationModal').style.display = 'none';
+                await fetchAndRenderResults();
+            }, 1500);
+        }
+    }
+
+    // ── Results ────────────────────────────────────────────────────────────────
+    let calculationResults = null;
+    let activeStrategy     = 'cheapest';
+
+    async function fetchAndRenderResults() {
+        try {
+            const res = await fetch(`/api/events/${EVENT_ID}/results`);
+            if (!res.ok) return;
+            const data = await res.json();
+            renderResults(data);
+        } catch (e) {
+            // Silently fail — results will be available on next page load
+        }
+    }
+
+    function renderResults(data) {
+        calculationResults = data;
+        const section = document.getElementById('resultsSection');
+        section.innerHTML = '';
+
+        const eyebrow = document.createElement('div');
+        eyebrow.className = 'results-eyebrow';
+        eyebrow.textContent = 'Best Destinations';
+        section.appendChild(eyebrow);
+
+        const heading = document.createElement('div');
+        heading.className = 'results-heading';
+        heading.textContent = 'Where your group can fly';
+        section.appendChild(heading);
+
+        // Strategy tabs
+        const tabs = document.createElement('div');
+        tabs.className = 'strategy-tabs';
+        [
+            { key: 'cheapest', label: 'Cheapest Overall' },
+            { key: 'fairest',  label: 'Fairest for Everyone' },
+            { key: 'fastest',  label: 'Shortest Travel' },
+        ].forEach(({ key, label }) => {
+            const tab = document.createElement('button');
+            tab.className = 'strategy-tab' + (key === activeStrategy ? ' active' : '');
+            tab.textContent = label;
+            tab.onclick = () => {
+                activeStrategy = key;
+                tabs.querySelectorAll('.strategy-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                renderDestCards(data, key);
+            };
+            tabs.appendChild(tab);
+        });
+        section.appendChild(tabs);
+
+        const fairnessEl = buildFairnessCallout(data);
+        if (fairnessEl) section.appendChild(fairnessEl);
+
+        const cardsContainer = document.createElement('div');
+        cardsContainer.id = 'destCardsContainer';
+        section.appendChild(cardsContainer);
+        renderDestCards(data, activeStrategy);
+
+        const bottleneckEl = buildBottleneckPanel(data);
+        if (bottleneckEl) section.appendChild(bottleneckEl);
+
+        section.style.display = 'block';
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderDestCards(data, strategy) {
+        const container = document.getElementById('destCardsContainer');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const rankField = `rank_${strategy}`;
+        const sorted = [...data.destinations]
+            .filter(d => d[rankField] >= 1 && d[rankField] <= 3)
+            .sort((a, b) => a[rankField] - b[rankField]);
+
+        if (!sorted.length) {
+            container.appendChild(buildEmptyState());
+            return;
+        }
+
+        const cards = document.createElement('div');
+        cards.className = 'dest-cards';
+        sorted.forEach((dest, idx) => cards.appendChild(buildDestCard(dest, idx + 1, strategy)));
+        container.appendChild(cards);
+    }
+
+    function buildDestCard(dest, displayRank) {
+        const card = document.createElement('div');
+        card.className = 'dest-card';
+
+        const badge = document.createElement('div');
+        badge.className = 'dest-rank-badge';
+        badge.textContent = `#${displayRank}`;
+        card.appendChild(badge);
+
+        const city = document.createElement('div');
+        city.className = 'dest-city';
+        city.textContent = dest.city_name || dest.iata;
+        card.appendChild(city);
+
+        const country = document.createElement('div');
+        country.className = 'dest-country';
+        country.textContent = [dest.country_code, dest.iata].filter(Boolean).join(' · ');
+        card.appendChild(country);
+
+        const { reachable, total } = dest.coverage;
+        const pill = document.createElement('div');
+        pill.className = 'dest-coverage-pill' + (reachable < total ? ' partial' : '');
+        pill.textContent = reachable === total
+            ? `All ${total} traveller${total !== 1 ? 's' : ''}`
+            : `${reachable} of ${total} travellers`;
+        card.appendChild(pill);
+
+        const rows = document.createElement('div');
+        rows.className = 'dest-person-rows';
+        dest.per_person.forEach(p => {
+            const row = document.createElement('div');
+            row.className = 'dest-person-row';
+
+            const name = document.createElement('span');
+            name.className = 'dest-person-name';
+            name.textContent = p.identifier;
+            row.appendChild(name);
+
+            const origin = document.createElement('span');
+            origin.className = 'dest-person-city';
+            origin.textContent = p.origin_city;
+            row.appendChild(origin);
+
+            if (p.can_reach) {
+                const price = document.createElement('span');
+                price.className = 'dest-person-price';
+                price.textContent = `€${p.price.toFixed(0)}`;
+                row.appendChild(price);
+
+                const stops = document.createElement('span');
+                stops.className = 'dest-person-stops';
+                stops.textContent = p.stops === 0 ? '✈ direct' : `✈ ${p.stops} stop${p.stops !== 1 ? 's' : ''}`;
+                row.appendChild(stops);
+            } else {
+                const unreachable = document.createElement('span');
+                unreachable.className = 'dest-person-unreachable';
+                unreachable.textContent = 'No flight found';
+                row.appendChild(unreachable);
+            }
+
+            rows.appendChild(row);
+        });
+        card.appendChild(rows);
+
+        const footer = document.createElement('div');
+        footer.className = 'dest-footer';
+
+        const reachablePersons = dest.per_person.filter(p => p.can_reach);
+        const totalCost  = dest.strategy_scores.total_cost;
+        const avgCost    = reachablePersons.length ? totalCost / reachablePersons.length : 0;
+
+        const totals = document.createElement('div');
+        totals.className = 'dest-total';
+        totals.innerHTML = `Total <strong>€${totalCost.toFixed(0)}</strong> · avg <strong>€${avgCost.toFixed(0)}</strong> pp`;
+        footer.appendChild(totals);
+
+        const links = reachablePersons.filter(p => p.deep_link).map(p => p.deep_link);
+        if (links.length) {
+            const viewBtn = document.createElement('button');
+            viewBtn.className = 'btn btn-ghost';
+            viewBtn.style.cssText = 'font-size: 0.8rem; padding: 0.35rem 0.85rem;';
+            viewBtn.textContent = 'View flights';
+            viewBtn.onclick = () => links.forEach(url => window.open(url, '_blank'));
+            footer.appendChild(viewBtn);
+        }
+
+        card.appendChild(footer);
+        return card;
+    }
+
+    function buildFairnessCallout(data) {
+        const cheapestTop = [...data.destinations]
+            .filter(d => d.rank_cheapest >= 1 && d.rank_cheapest <= 3)
+            .sort((a, b) => a.rank_cheapest - b.rank_cheapest);
+        if (!cheapestTop.length) return null;
+
+        const top    = cheapestTop[0];
+        const prices = top.per_person.filter(p => p.can_reach).map(p => p.price);
+        if (prices.length < 2) return null;
+
+        const mean     = prices.reduce((a, b) => a + b, 0) / prices.length;
+        const variance = prices.reduce((s, p) => s + (p - mean) ** 2, 0) / prices.length;
+        const cv       = Math.sqrt(variance) / mean;
+        if (cv <= 0.3) return null;
+
+        const maxPerson = top.per_person
+            .filter(p => p.can_reach)
+            .reduce((a, b) => a.price > b.price ? a : b);
+
+        const el = document.createElement('div');
+        el.className = 'fairness-callout';
+        el.innerHTML = `<strong>${maxPerson.identifier}</strong> pays €${(maxPerson.price - mean).toFixed(0)} more than average on the cheapest route. Try the <strong>Fairest for Everyone</strong> tab to balance costs.`;
+        return el;
+    }
+
+    function buildBottleneckPanel(data) {
+        if (!data.bottleneck || data.bottleneck.destinations_unlocked === 0) return null;
+        const { identifier, origin_city, destinations_unlocked } = data.bottleneck;
+        const el = document.createElement('div');
+        el.className = 'bottleneck-panel';
+        el.innerHTML = `<strong>${identifier}</strong> from <strong>${origin_city}</strong> is your group's tightest constraint — their airport has fewer routes. If they can depart from a nearby hub, <strong>${destinations_unlocked}</strong> more destination${destinations_unlocked !== 1 ? 's' : ''} become available.`;
+        return el;
+    }
+
+    function buildEmptyState() {
+        const el = document.createElement('div');
+        el.className = 'results-empty-state';
+        el.innerHTML = `
+            <div class="empty-icon">✈</div>
+            <h3>No destinations found</h3>
+            <p>No destination had enough flights for your group's dates.<br>
+            Try expanding the date range, or ask travellers with limited availability to update their responses.</p>
+        `;
+        return el;
+    }
+
+    // ── Attendee view ──────────────────────────────────────────────────────────
+    function renderAttendeeView(event) {
+        document.getElementById('attendeeSection').style.display = 'block';
+
+        // Check for edit token in URL
+        const params = new URLSearchParams(window.location.search);
+        editToken = params.get('edit');
+
+        if (CURRENT_USER) {
+            showAttendeeStep2(CURRENT_USER, null);
+        } else if (editToken) {
+            prefillFromToken(editToken, event);
+        } else {
+            document.getElementById('attendeeStep1').style.display = 'block';
+        }
+    }
+
+    function showAttendeeStep2(username, email) {
+        document.getElementById('attendeeStep1').style.display = 'none';
+        document.getElementById('attendeeStep2').style.display = 'block';
+
+        const badge = document.getElementById('identityBadge');
+        if (username)   { badge.textContent = `Submitting as: ${username}`;  badge.style.display = 'block'; }
+        else if (email) { badge.textContent = `Submitting for: ${email}`;    badge.style.display = 'block'; }
+        else            { badge.style.display = 'none'; }
+
+        document.getElementById('feedbackCityInput').value  = '';
+        document.getElementById('feedbackCityValue').value  = '';
+        document.getElementById('feedbackAdults').value     = '1';
+        document.getElementById('feedbackChildren').value   = '0';
+
+        if (feedbackCalPicker) { feedbackCalPicker.destroy(); feedbackCalPicker = null; }
+        if (currentEvent) {
+            feedbackCalPicker = new CalendarPicker(
+                document.getElementById('feedbackCalendarContainer'),
+                currentEvent.earliest_date,
+                currentEvent.latest_date
+            );
+        }
+    }
+
+    async function prefillFromToken(token, event) {
+        try {
+            const res = await fetch(`/api/events/${event.id}/feedback/edit/${token}`);
+            if (!res.ok) {
+                // Token not found — show identity gate
+                document.getElementById('attendeeStep1').style.display = 'block';
+                return;
+            }
+            const data = await res.json();
+            isEditMode = true;
+
+            const badge = document.getElementById('identityBadge');
+            badge.textContent = data.attendee_email ? `Editing response for: ${data.attendee_email}` : 'Editing your response';
+            badge.style.display = 'block';
+
+            document.getElementById('formTitle').textContent    = 'Update Your Details';
+            document.getElementById('formSubtitle').textContent = 'Make your changes below and confirm to update your response.';
+            document.getElementById('submitBtn').textContent    = 'Update My Details';
+
+            document.getElementById('attendeeStep1').style.display = 'none';
+            document.getElementById('attendeeStep2').style.display = 'block';
+
+            document.getElementById('feedbackCityInput').value = data.city || '';
+            document.getElementById('feedbackCityValue').value = data.city || '';
+            document.getElementById('feedbackAdults').value    = data.adults  || 1;
+            document.getElementById('feedbackChildren').value  = data.children || 0;
+
+            if (feedbackCalPicker) { feedbackCalPicker.destroy(); feedbackCalPicker = null; }
+            feedbackCalPicker = new CalendarPicker(
+                document.getElementById('feedbackCalendarContainer'),
+                event.earliest_date,
+                event.latest_date
+            );
+            if (data.availability_periods) {
+                try {
+                    feedbackCalPicker.setSelectedFromPeriods(JSON.parse(data.availability_periods));
+                } catch {}
+            }
+        } catch {
+            document.getElementById('attendeeStep1').style.display = 'block';
+        }
+    }
+
+    function proceedWithEmail() {
+        const email = document.getElementById('attendeeEmail').value.trim();
+        if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+        pendingEmail = email;
+        showAttendeeStep2(null, email);
+    }
+
+    async function submitResponse() {
+        const city = document.getElementById('feedbackCityValue').value
+                     || document.getElementById('feedbackCityInput').value.trim();
+        if (!city) { alert('Please select your departure city.'); return; }
+
+        const periods = feedbackCalPicker ? feedbackCalPicker.getSelectedPeriods() : [];
+        if (!periods.length) { alert('Please select at least one available date.'); return; }
+
+        const adults   = parseInt(document.getElementById('feedbackAdults').value,   10) || 1;
+        const children = parseInt(document.getElementById('feedbackChildren').value, 10) || 0;
+
+        const payload = { city, adults, children, availability_periods: JSON.stringify(periods) };
+        if (pendingEmail) payload.attendee_email = pendingEmail;
+
+        try {
+            let res;
+            if (isEditMode && editToken) {
+                res = await fetch(`/api/events/${EVENT_ID}/feedback/edit/${editToken}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+            } else {
+                res = await fetch(`/api/events/${EVENT_ID}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+            }
+
+            if (!res.ok) { alert('Failed to submit. Please try again.'); return; }
+            const data = await res.json();
+
+            document.getElementById('attendeeStep2').style.display = 'none';
+            document.getElementById('attendeeSuccess').style.display = 'block';
+
+            // Show edit link only for email-only users on a fresh submission
+            if (pendingEmail && !isEditMode && data.edit_token) {
+                const editUrl = `${window.location.origin}/group/${EVENT_ID}?edit=${data.edit_token}`;
+                document.getElementById('editLinkInput').value = editUrl;
+                document.getElementById('editLinkPanel').style.display = 'block';
+            }
+
+            // Clean the edit token from URL to prevent accidental reuse
+            if (isEditMode) {
+                window.history.replaceState({}, '', `/group/${EVENT_ID}`);
+            }
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
+    }
+
+    function copyEditLink() {
+        const input = document.getElementById('editLinkInput');
+        input.select();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(input.value).then(() => alert('Edit link copied!'));
+        } else {
+            document.execCommand('copy');
+            alert('Edit link copied! (fallback)');
+        }
+    }
+
+    // ── Page init ──────────────────────────────────────────────────────────────
+    window.onload = async () => {
+        initCityAutocomplete('feedbackCityInput', 'feedbackCityValue', 'cityDropdown', 'cityAutocompleteWrapper');
+
+        // If returned from login/signup, remove query param
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('authed') === '1') {
+            const editParam = params.get('edit');
+            const newUrl    = editParam ? `/group/${EVENT_ID}?edit=${editParam}` : `/group/${EVENT_ID}`;
+            window.history.replaceState({}, '', newUrl);
+        }
+
+        try {
+            const res   = await fetch(`/api/events/${EVENT_ID}`);
+            if (!res.ok) throw new Error('Event not found');
+            const event = await res.json();
+            currentEvent = event;
+
+            document.getElementById('loadingState').style.display = 'none';
+            renderEventCard(event);
+
+            if (event.is_owner) await renderOwnerView(event);
+            else                renderAttendeeView(event);
+
+            if (event.calculated) {
+                await fetchAndRenderResults();
+            }
+        } catch (e) {
+            document.getElementById('loadingState').textContent = 'Unable to load this gathering. The link may be invalid.';
+        }
+    };
+</script>
+
+</body>
+</html>

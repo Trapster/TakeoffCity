@@ -525,6 +525,116 @@
             line-height: 1.75;
         }
 
+        /* ── City autocomplete dropdown ── */
+        .city-dropdown-item {
+            padding: 0.6rem 0.9rem;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.1s;
+        }
+        .city-dropdown-item:last-child { border-bottom: none; }
+        .city-dropdown-item:hover,
+        .city-dropdown-item.active { background: var(--surface-2); }
+        .city-dropdown-item .city-country {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: 0.4rem;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .modal-content.modal-wide { max-width: 480px; }
+
+        /* ── CalendarPicker ── */
+        .cal-wrapper { user-select: none; }
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        .cal-header-title {
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        .cal-nav-btn {
+            background: none;
+            border: 1px solid var(--border-strong);
+            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            padding: 0;
+        }
+        .cal-nav-btn:disabled { opacity: 0.3; cursor: default; }
+        .cal-nav-btn:not(:disabled):hover { background: var(--surface-2); }
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .cal-dow {
+            text-align: center;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 0.25rem 0;
+            font-family: 'Jost', sans-serif;
+        }
+        .cal-day {
+            text-align: center;
+            padding: 0.35rem 0.2rem;
+            border-radius: 5px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: background 0.1s;
+        }
+        .cal-day:hover:not(.out-of-range):not(.empty) { background: var(--surface-2); }
+        .cal-day.empty, .cal-day.out-of-range { background: none; cursor: default; }
+        .cal-day.out-of-range { color: var(--text-muted); opacity: 0.4; }
+        .cal-day.selected { background: var(--accent); color: #fff; }
+        .cal-day.in-range { background: var(--accent-dim); }
+        .cal-selected-summary {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+            min-height: 1.4em;
+            font-family: 'DM Mono', monospace;
+        }
+
+        /* ── Toggle buttons ── */
+        .toggle-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border-strong);
+            color: var(--text-dim);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.83rem;
+            cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+        .toggle-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+        .toggle-btn:not(.active):hover { background: var(--surface-3); color: var(--text); }
+
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.25rem; }
             .section-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
@@ -632,22 +742,60 @@
 
 <!-- Create Group Modal -->
 <div id="createGroupModal" class="modal">
-    <div class="modal-content">
-        <h2 class="modal-title">Plan a Gathering</h2>
-        <div class="form-group">
-            <label>Gathering Name</label>
-            <input type="text" id="groupName" class="form-control" placeholder="Q3 Leadership Retreat">
+    <div class="modal-content modal-wide">
+        <!-- Step 1: Dates + trip length -->
+        <div id="createStep1">
+            <h2 class="modal-title">Plan a Gathering</h2>
+            <div class="form-group">
+                <label>Gathering Name</label>
+                <input type="text" id="groupName" class="form-control" placeholder="Q3 Leadership Retreat">
+            </div>
+            <div class="form-group">
+                <label>Earliest Date</label>
+                <input type="date" id="earliestDate" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Latest Date</label>
+                <input type="date" id="latestDate" class="form-control">
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Min Days (optional)</label>
+                    <input type="number" id="minDays" class="form-control" placeholder="e.g. 3" min="1">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Max Days (optional)</label>
+                    <input type="number" id="maxDays" class="form-control" placeholder="e.g. 7" min="1">
+                </div>
+            </div>
+            <button onclick="goToCreateStep2()" class="btn btn-primary" style="width: 100%;">Next</button>
+            <button onclick="hideCreateGroup()" class="btn btn-cancel">Cancel</button>
         </div>
-        <div class="form-group">
-            <label>Earliest Date</label>
-            <input type="date" id="earliestDate" class="form-control">
+        <!-- Step 2: Organiser attendance -->
+        <div id="createStep2" style="display: none;">
+            <h2 class="modal-title">Will you be attending?</h2>
+            <p style="color: var(--text-dim); font-size: 0.875rem; margin-bottom: 1.25rem;">If you're travelling with the group, add your own details now.</p>
+            <div style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem;">
+                <button id="attendYesBtn" onclick="setOrganiserAttends(true)" class="toggle-btn" style="flex: 1;">Yes, I'm attending</button>
+                <button id="attendNoBtn" onclick="setOrganiserAttends(false)" class="toggle-btn active" style="flex: 1;">No, just organising</button>
+            </div>
+            <div id="organiserTravelDetails" style="display: none;">
+                <div class="form-group">
+                    <label>Your Departure City</label>
+                    <div id="organiserCityWrapper" style="position: relative;">
+                        <input type="text" id="organiserCityInput" class="form-control" placeholder="e.g. New York" autocomplete="off">
+                        <input type="hidden" id="organiserCityValue">
+                        <div id="organiserCityDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: 0 8px 24px rgba(28,24,20,0.10); z-index: 3000; max-height: 220px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Your Available Dates</label>
+                    <div id="organiserCalendarContainer"></div>
+                </div>
+            </div>
+            <button onclick="submitGroup()" class="btn btn-primary" style="width: 100%;">Create Gathering</button>
+            <button onclick="backToCreateStep1()" class="btn btn-cancel">Back</button>
         </div>
-        <div class="form-group">
-            <label>Latest Date</label>
-            <input type="date" id="latestDate" class="form-control">
-        </div>
-        <button onclick="submitGroup()" class="btn btn-primary" style="width: 100%;">Begin Planning</button>
-        <button onclick="hideCreateGroup()" class="btn btn-cancel">Cancel</button>
     </div>
 </div>
 
@@ -668,13 +816,15 @@
 <div id="eventDashboardModal" class="modal">
     <div class="modal-content">
         <h2 id="dashEventName" class="modal-title">Group Name</h2>
-        <p id="dashEventDates" style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.875rem;">Dates</p>
+        <p id="dashEventDates" style="color: var(--text-muted); margin-bottom: 0.4rem; font-size: 0.875rem;">Dates</p>
+        <p id="dashEventMeta" style="color: var(--text-dim); margin-bottom: 1.25rem; font-size: 0.82rem; font-family: 'DM Mono', monospace;"></p>
 
         <div class="stat-highlight-box">
             <div class="stat-highlight-num" id="feedbackCount">0</div>
             <div class="stat-highlight-label">Responses Received</div>
         </div>
 
+        <button onclick="reCopyShareLink()" class="btn" style="width: 100%; margin-bottom: 0.75rem; background: var(--surface-2); border: 1px solid var(--border-strong); color: var(--text-dim);">Copy Share Link Again</button>
         <button id="calculateBtn" onclick="triggerCalculation()" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Calculate Best Destination</button>
         <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">Wait for more responses or calculate now.</p>
         <button onclick="hideEventDashboard()" class="btn btn-cancel" style="margin-top: 1rem;">Close</button>
@@ -693,115 +843,475 @@
 
 <!-- Feedback Form Modal -->
 <div id="feedbackFormModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content modal-wide">
         <h2 id="feedbackEventName" class="modal-title">You're Invited</h2>
         <p id="feedbackEventDates" style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.875rem;">Planning Window</p>
-        <div class="form-group">
-            <label>Your Departure City</label>
-            <input type="text" id="feedbackCity" class="form-control" placeholder="e.g. London">
+
+        <!-- Step 1: Identity gate (shown to anonymous users) -->
+        <div id="feedbackStep1">
+            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1.25rem; line-height: 1.6;">
+                To submit your travel details, please sign in or provide your email so the organiser can reach you.
+            </p>
+            <button onclick="openLoginFromFeedback()" class="btn btn-primary" style="width: 100%; margin-bottom: 0.75rem;">Sign in or create account</button>
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.75rem;">— or —</div>
+            <div class="form-group">
+                <label>Continue with email only</label>
+                <input type="email" id="feedbackEmail" class="form-control" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <button onclick="proceedWithEmail()" class="btn btn-primary" style="width: 100%;">Continue</button>
+            <button onclick="hideFeedbackForm()" class="btn btn-cancel" style="margin-top: 0.75rem;">Cancel</button>
         </div>
-        <div class="form-group">
-            <label>Available From</label>
-            <input type="date" id="feedbackStartDate" class="form-control">
+
+        <!-- Step 2: Departure details (shown after identity is established) -->
+        <div id="feedbackStep2" style="display: none;">
+            <div id="feedbackIdentityBadge" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; margin-bottom: 1.25rem; font-size: 0.82rem; color: var(--text-dim);"></div>
+            <div class="form-group">
+                <label>Your Departure City</label>
+                <div id="cityAutocompleteWrapper" style="position: relative;">
+                    <input type="text" id="feedbackCityInput" class="form-control" placeholder="e.g. London" autocomplete="off">
+                    <input type="hidden" id="feedbackCityValue">
+                    <div id="cityDropdown" style="display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: 0 8px 24px rgba(28,24,20,0.10); z-index: 3000; max-height: 220px; overflow-y: auto;"></div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Adults</label>
+                    <input type="number" id="feedbackAdults" class="form-control" value="1" min="1">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Children</label>
+                    <input type="number" id="feedbackChildren" class="form-control" value="0" min="0">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Your Available Dates</label>
+                <div id="feedbackCalendarContainer"></div>
+            </div>
+            <button onclick="submitFeedback()" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Confirm My Details</button>
+            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">Your response helps everyone arrive with ease.</p>
+            <button onclick="hideFeedbackForm()" class="btn btn-cancel" style="margin-top: 1rem;">Cancel</button>
         </div>
-        <div class="form-group">
-            <label>Available Until</label>
-            <input type="date" id="feedbackEndDate" class="form-control">
-        </div>
-        <button onclick="submitFeedback()" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Confirm My Details</button>
-        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">Your response helps everyone arrive with ease.</p>
-        <button onclick="hideFeedbackForm()" class="btn btn-cancel" style="margin-top: 1rem;">Cancel</button>
     </div>
 </div>
 
+<script>const CURRENT_USER = {{ username | tojson }};</script>
 <script>
-    let currentEventId = null;
+    // ── State ──────────────────────────────────────────────────────────────────
+    let currentEventId   = null;
+    let currentEvent     = null;
+    let pendingFeedbackEmail  = null;
+    let pendingFeedbackAction = false;
+    let organiserAttends = false;
+    let feedbackCalPicker   = null;
+    let organiserCalPicker  = null;
 
-    function showLogin() {
-        document.getElementById('loginModal').style.display = 'flex';
-    }
-    function hideLogin() {
-        document.getElementById('loginModal').style.display = 'none';
-    }
-    function showSignup() {
-        document.getElementById('signupModal').style.display = 'flex';
-    }
-    function hideSignup() {
-        document.getElementById('signupModal').style.display = 'none';
-    }
-    function switchToSignup() {
-        hideLogin();
-        showSignup();
-    }
-    function switchToLogin() {
-        hideSignup();
-        showLogin();
-    }
-    function validateSignup(form) {
-        const pw = document.getElementById('signupPassword').value;
-        const confirm = document.getElementById('signupConfirm').value;
-        if (pw !== confirm) {
-            alert('Passwords do not match.');
-            return false;
+    // ── CalendarPicker ─────────────────────────────────────────────────────────
+
+    class CalendarPicker {
+        constructor(containerEl, minDate, maxDate) {
+            this._container = containerEl;
+            this._min = minDate;
+            this._max = maxDate;
+            this._selected = new Set();
+            this._cursor = new Date(minDate + 'T00:00:00');
+            this._cursor.setDate(1);
+            this._dragging   = false;
+            this._dragAnchor = null;
+            this._dragMode   = null;
+            this._dragPending = new Set();
+            this._mouseUpHandler = () => {
+                if (!this._dragging) return;
+                this._dragging = false;
+                this._dragPending.forEach(d => {
+                    if (this._dragMode === 'add') this._selected.add(d);
+                    else this._selected.delete(d);
+                });
+                this._dragPending.clear();
+                this._render();
+            };
+            document.addEventListener('mouseup',  this._mouseUpHandler);
+            document.addEventListener('touchend', this._mouseUpHandler);
+            this._render();
         }
+
+        _iso(d) { return d.toISOString().slice(0, 10); }
+        _inRange(iso) { return iso >= this._min && iso <= this._max; }
+
+        _render() {
+            this._container.innerHTML = '';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'cal-wrapper';
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'cal-header';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'cal-nav-btn';
+            prevBtn.textContent = '‹';
+            prevBtn.type = 'button';
+            const prevMonthEnd = new Date(this._cursor.getFullYear(), this._cursor.getMonth(), 0);
+            if (this._iso(prevMonthEnd) < this._min) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.addEventListener('click', () => {
+                    this._cursor.setMonth(this._cursor.getMonth() - 1);
+                    this._render();
+                });
+            }
+
+            const title = document.createElement('div');
+            title.className = 'cal-header-title';
+            title.textContent = this._cursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'cal-nav-btn';
+            nextBtn.textContent = '›';
+            nextBtn.type = 'button';
+            const nextMonthStart = new Date(this._cursor.getFullYear(), this._cursor.getMonth() + 1, 1);
+            if (this._iso(nextMonthStart) > this._max) {
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.addEventListener('click', () => {
+                    this._cursor.setMonth(this._cursor.getMonth() + 1);
+                    this._render();
+                });
+            }
+
+            header.appendChild(prevBtn);
+            header.appendChild(title);
+            header.appendChild(nextBtn);
+            wrapper.appendChild(header);
+
+            // Day-of-week row
+            const grid = document.createElement('div');
+            grid.className = 'cal-grid';
+            ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+                const el = document.createElement('div');
+                el.className = 'cal-dow';
+                el.textContent = d;
+                grid.appendChild(el);
+            });
+
+            // Empty cells for first-day offset
+            const year = this._cursor.getFullYear();
+            const month = this._cursor.getMonth();
+            const firstDow = new Date(year, month, 1).getDay();
+            for (let i = 0; i < firstDow; i++) {
+                const el = document.createElement('div');
+                el.className = 'cal-day empty';
+                grid.appendChild(el);
+            }
+
+            // Day cells
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let d = 1; d <= daysInMonth; d++) {
+                const iso = `${year}-${String(month + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const el = document.createElement('div');
+                el.className = 'cal-day';
+                el.textContent = d;
+                el.dataset.iso = iso;
+
+                if (!this._inRange(iso)) {
+                    el.classList.add('out-of-range');
+                } else {
+                    if (this._selected.has(iso)) el.classList.add('selected');
+                    const _startDrag = (e) => {
+                        e.preventDefault();
+                        this._dragging = true;
+                        this._dragAnchor = iso;
+                        this._dragMode = this._selected.has(iso) ? 'remove' : 'add';
+                        this._dragPending = new Set([iso]);
+                        this._renderDayStates();
+                    };
+                    el.addEventListener('mousedown', _startDrag);
+                    el.addEventListener('touchstart', _startDrag, { passive: false });
+                    el.addEventListener('mouseover', () => {
+                        if (this._dragging) this._applyDrag(iso);
+                    });
+                    el.addEventListener('touchmove', (e) => {
+                        if (!this._dragging) return;
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                        if (target && target.dataset.iso) this._applyDrag(target.dataset.iso);
+                    }, { passive: false });
+                }
+                grid.appendChild(el);
+            }
+            wrapper.appendChild(grid);
+
+            // Summary
+            const summary = document.createElement('div');
+            summary.className = 'cal-selected-summary';
+            const periods = this.getSelectedPeriods();
+            summary.textContent = periods.length
+                ? periods.map(p => p.start === p.end ? p.start : `${p.start} – ${p.end}`).join(', ')
+                : 'Click or drag to select available dates';
+            wrapper.appendChild(summary);
+
+            this._container.appendChild(wrapper);
+        }
+
+        _applyDrag(iso) {
+            const [a, b] = [this._dragAnchor, iso].sort();
+            const pending = new Set();
+            const cur = new Date(a + 'T00:00:00');
+            const end = new Date(b + 'T00:00:00');
+            while (cur <= end) {
+                const curIso = this._iso(cur);
+                if (this._inRange(curIso)) pending.add(curIso);
+                cur.setDate(cur.getDate() + 1);
+            }
+            this._dragPending = pending;
+            this._renderDayStates();
+        }
+
+        _renderDayStates() {
+            this._container.querySelectorAll('.cal-day[data-iso]').forEach(cell => {
+                const iso = cell.dataset.iso;
+                const inPending = this._dragPending && this._dragPending.has(iso);
+                const selected = inPending
+                    ? this._dragMode === 'add'
+                    : this._selected.has(iso);
+                cell.classList.toggle('selected', selected);
+            });
+        }
+
+        getSelectedPeriods() {
+            const sorted = Array.from(this._selected).sort();
+            if (!sorted.length) return [];
+            const periods = [];
+            let start = sorted[0], prev = sorted[0];
+            for (let i = 1; i < sorted.length; i++) {
+                const cur = sorted[i];
+                const nxt = new Date(prev + 'T00:00:00');
+                nxt.setDate(nxt.getDate() + 1);
+                const expected = this._iso(nxt);
+                if (cur === expected) {
+                    prev = cur;
+                } else {
+                    periods.push({ start, end: prev });
+                    start = cur; prev = cur;
+                }
+            }
+            periods.push({ start, end: prev });
+            return periods;
+        }
+
+        reset() {
+            this._selected.clear();
+            this._cursor = new Date(this._min + 'T00:00:00');
+            this._cursor.setDate(1);
+            this._render();
+        }
+
+        destroy() {
+            document.removeEventListener('mouseup',  this._mouseUpHandler);
+            document.removeEventListener('touchend', this._mouseUpHandler);
+            this._container.innerHTML = '';
+        }
+    }
+
+    // ── City autocomplete ──────────────────────────────────────────────────────
+
+    function initCityAutocomplete(inputId, hiddenId, dropdownId, wrapperId) {
+        const input    = document.getElementById(inputId);
+        const hidden   = document.getElementById(hiddenId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!input || !dropdown) return;
+
+        let searchTimer = null;
+        let activeIndex = -1;
+
+        input.addEventListener('input', () => {
+            const q = input.value.trim();
+            hidden.value = '';
+            clearTimeout(searchTimer);
+            if (q.length < 2) { closeDropdown(); return; }
+            searchTimer = setTimeout(() => fetchCities(q), 280);
+        });
+
+        input.addEventListener('keydown', (e) => {
+            const items = dropdown.querySelectorAll('.city-dropdown-item');
+            if (!items.length) return;
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, items.length - 1);
+                updateActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                updateActive(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (activeIndex >= 0) items[activeIndex].click();
+            } else if (e.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById(wrapperId);
+            if (wrapper && !wrapper.contains(e.target)) closeDropdown();
+        });
+
+        async function fetchCities(q) {
+            try {
+                const res = await fetch(`/api/cities/search?q=${encodeURIComponent(q)}`);
+                if (!res.ok) { closeDropdown(); return; }
+                const data = await res.json();
+                renderDropdown(data.cities || []);
+            } catch { closeDropdown(); }
+        }
+
+        function renderDropdown(cities) {
+            dropdown.innerHTML = '';
+            activeIndex = -1;
+            if (!cities.length) { closeDropdown(); return; }
+            cities.forEach(city => {
+                const item = document.createElement('div');
+                item.className = 'city-dropdown-item';
+                item.appendChild(document.createTextNode(city.name));
+                const cc = document.createElement('span');
+                cc.className = 'city-country';
+                cc.textContent = city.country_code;
+                item.appendChild(cc);
+                item.addEventListener('click', () => {
+                    input.value = city.name;
+                    hidden.value = city.name;
+                    closeDropdown();
+                });
+                dropdown.appendChild(item);
+            });
+            dropdown.style.display = 'block';
+        }
+
+        function updateActive(items) {
+            items.forEach((item, i) => item.classList.toggle('active', i === activeIndex));
+        }
+
+        function closeDropdown() {
+            dropdown.style.display = 'none';
+            activeIndex = -1;
+        }
+    }
+
+    // ── Auth modals ────────────────────────────────────────────────────────────
+
+    function showLogin() { document.getElementById('loginModal').style.display = 'flex'; }
+    function hideLogin()  { document.getElementById('loginModal').style.display = 'none'; }
+    function showSignup() { document.getElementById('signupModal').style.display = 'flex'; }
+    function hideSignup() { document.getElementById('signupModal').style.display = 'none'; }
+    function switchToSignup() { hideLogin(); showSignup(); }
+    function switchToLogin()  { hideSignup(); showLogin(); }
+
+    function validateSignup(form) {
+        const pw      = document.getElementById('signupPassword').value;
+        const confirm = document.getElementById('signupConfirm').value;
+        if (pw !== confirm) { alert('Passwords do not match.'); return false; }
         return true;
     }
+
+    // ── Create Group modal ─────────────────────────────────────────────────────
+
     function showCreateGroup() {
         document.getElementById('createGroupModal').style.display = 'flex';
     }
+
     function hideCreateGroup() {
         document.getElementById('createGroupModal').style.display = 'none';
-    }
-    function showShareLink(link) {
-        document.getElementById('shareLinkInput').value = link;
-        document.getElementById('shareLinkModal').style.display = 'flex';
-    }
-    function hideShareLink() {
-        document.getElementById('shareLinkModal').style.display = 'none';
-    }
-    function showEventDashboard(event) {
-        document.getElementById('dashEventName').innerText = event.name;
-        document.getElementById('dashEventDates').innerText = `${event.earliest_date} to ${event.latest_date}`;
-        document.getElementById('feedbackCount').innerText = event.feedback_count;
-        document.getElementById('eventDashboardModal').style.display = 'flex';
-    }
-    function hideEventDashboard() {
-        document.getElementById('eventDashboardModal').style.display = 'none';
+        // Reset to step 1
+        document.getElementById('createStep1').style.display = 'block';
+        document.getElementById('createStep2').style.display = 'none';
+        organiserAttends = false;
+        document.getElementById('attendYesBtn').classList.remove('active');
+        document.getElementById('attendNoBtn').classList.add('active');
+        document.getElementById('organiserTravelDetails').style.display = 'none';
+        if (organiserCalPicker) { organiserCalPicker.destroy(); organiserCalPicker = null; }
+        document.getElementById('organiserCityInput').value = '';
+        document.getElementById('organiserCityValue').value = '';
     }
 
-    function copyShareLink() {
-        const copyText = document.getElementById("shareLinkInput");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(copyText.value).then(() => {
-                alert("Link copied to clipboard!");
-            });
+    function goToCreateStep2() {
+        const name           = document.getElementById('groupName').value.trim();
+        const earliest_date  = document.getElementById('earliestDate').value;
+        const latest_date    = document.getElementById('latestDate').value;
+        if (!name || !earliest_date || !latest_date) {
+            alert('Please fill in name and both dates.');
+            return;
+        }
+        if (earliest_date > latest_date) {
+            alert('Earliest date must not be after latest date.');
+            return;
+        }
+        document.getElementById('createStep1').style.display = 'none';
+        document.getElementById('createStep2').style.display = 'block';
+    }
+
+    function backToCreateStep1() {
+        document.getElementById('createStep2').style.display = 'none';
+        document.getElementById('createStep1').style.display = 'block';
+    }
+
+    function setOrganiserAttends(val) {
+        organiserAttends = val;
+        document.getElementById('attendYesBtn').classList.toggle('active', val);
+        document.getElementById('attendNoBtn').classList.toggle('active', !val);
+        const travelDiv = document.getElementById('organiserTravelDetails');
+        if (val) {
+            travelDiv.style.display = 'block';
+            if (!organiserCalPicker) {
+                const minDate = document.getElementById('earliestDate').value;
+                const maxDate = document.getElementById('latestDate').value;
+                organiserCalPicker = new CalendarPicker(
+                    document.getElementById('organiserCalendarContainer'), minDate, maxDate
+                );
+            }
         } else {
-            document.execCommand("copy");
-            alert("Link copied to clipboard! (fallback)");
+            travelDiv.style.display = 'none';
+            if (organiserCalPicker) { organiserCalPicker.destroy(); organiserCalPicker = null; }
         }
     }
 
     async function submitGroup() {
-        const name = document.getElementById('groupName').value;
+        const name          = document.getElementById('groupName').value.trim();
         const earliest_date = document.getElementById('earliestDate').value;
-        const latest_date = document.getElementById('latestDate').value;
+        const latest_date   = document.getElementById('latestDate').value;
+        const minDaysVal    = document.getElementById('minDays').value;
+        const maxDaysVal    = document.getElementById('maxDays').value;
 
-        if (!name || !earliest_date || !latest_date) {
-            alert('Please fill in all fields');
-            return;
-        }
+        const payload = { name, earliest_date, latest_date };
+        if (minDaysVal) payload.min_days = parseInt(minDaysVal, 10);
+        if (maxDaysVal) payload.max_days = parseInt(maxDaysVal, 10);
+        payload.organiser_attends = organiserAttends;
 
         hideCreateGroup();
         try {
             const eventRes = await fetch('/api/events', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, earliest_date, latest_date, details: {} })
+                body: JSON.stringify(payload)
             });
             const eventData = await eventRes.json();
             currentEventId = eventData.event_id;
+
+            // If organiser is attending, submit their feedback too
+            if (organiserAttends) {
+                const city = document.getElementById('organiserCityValue').value
+                             || document.getElementById('organiserCityInput').value.trim();
+                const periods = organiserCalPicker ? organiserCalPicker.getSelectedPeriods() : [];
+                if (city) {
+                    const fbPayload = { city };
+                    if (periods.length) fbPayload.availability_periods = JSON.stringify(periods);
+                    await fetch(`/api/events/${currentEventId}/feedback`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fbPayload)
+                    });
+                }
+            }
+
             const dynamicShareLink = `${window.location.origin}/group/${eventData.event_id}`;
             showShareLink(dynamicShareLink);
         } catch (err) {
@@ -809,21 +1319,72 @@
         }
     }
 
-    function hideCalculation() {
-        document.getElementById('calculationModal').style.display = 'none';
+    // ── Share Link modal ───────────────────────────────────────────────────────
+
+    function showShareLink(link) {
+        document.getElementById('shareLinkInput').value = link;
+        document.getElementById('shareLinkModal').style.display = 'flex';
     }
+    function hideShareLink() { document.getElementById('shareLinkModal').style.display = 'none'; }
+
+    function copyShareLink() {
+        const copyText = document.getElementById('shareLinkInput');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyText.value).then(() => alert('Link copied to clipboard!'));
+        } else {
+            document.execCommand('copy');
+            alert('Link copied to clipboard! (fallback)');
+        }
+    }
+
+    function reCopyShareLink() {
+        const link = `${window.location.origin}/group/${currentEventId}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(link).then(() => alert('Share link copied!'));
+        } else {
+            prompt('Copy this link:', link);
+        }
+    }
+
+    // ── Event Dashboard modal ──────────────────────────────────────────────────
+
+    function showEventDashboard(event) {
+        currentEvent = event;
+        document.getElementById('dashEventName').innerText  = event.name;
+        document.getElementById('dashEventDates').innerText = `${event.earliest_date} to ${event.latest_date}`;
+
+        const metaParts = [];
+        if (event.min_days || event.max_days) {
+            if (event.min_days && event.max_days) metaParts.push(`${event.min_days}–${event.max_days} days`);
+            else if (event.min_days) metaParts.push(`min ${event.min_days} days`);
+            else metaParts.push(`max ${event.max_days} days`);
+        }
+        if (event.organiser_attends) metaParts.push('organiser attending');
+        document.getElementById('dashEventMeta').innerText = metaParts.join(' · ');
+
+        document.getElementById('feedbackCount').innerText  = event.feedback_count;
+        document.getElementById('eventDashboardModal').style.display = 'flex';
+    }
+
+    function hideEventDashboard() { document.getElementById('eventDashboardModal').style.display = 'none'; }
+
+    // ── Calculation modal ──────────────────────────────────────────────────────
+
+    function hideCalculation() { document.getElementById('calculationModal').style.display = 'none'; }
 
     async function triggerCalculation() {
         if (!currentEventId) return;
         hideEventDashboard();
-        const log = document.getElementById('calculation-log');
+        const log      = document.getElementById('calculation-log');
         const closeBtn = document.getElementById('calcCloseBtn');
         log.textContent = '';
         closeBtn.style.display = 'none';
         document.getElementById('calculationModal').style.display = 'flex';
         try {
             const calcRes = await fetch(`/api/calculate/${currentEventId}`, { method: 'POST' });
-            const reader = calcRes.body.getReader();
+            const reader  = calcRes.body.getReader();
             const decoder = new TextDecoder();
             while (true) {
                 const { done, value } = await reader.read();
@@ -838,30 +1399,101 @@
         }
     }
 
+    // ── Feedback modal ─────────────────────────────────────────────────────────
+
     function showFeedbackForm(event) {
-        document.getElementById('feedbackEventName').innerText = event.name;
+        currentEvent = event;
+        document.getElementById('feedbackEventName').innerText  = event.name;
         document.getElementById('feedbackEventDates').innerText = `Planning window: ${event.earliest_date} to ${event.latest_date}`;
+
+        if (CURRENT_USER) {
+            showFeedbackStep2(CURRENT_USER, null);
+        } else {
+            document.getElementById('feedbackStep1').style.display = 'block';
+            document.getElementById('feedbackStep2').style.display = 'none';
+            document.getElementById('feedbackEmail').value = '';
+            pendingFeedbackEmail = null;
+        }
+
         document.getElementById('feedbackFormModal').style.display = 'flex';
     }
+
     function hideFeedbackForm() {
         document.getElementById('feedbackFormModal').style.display = 'none';
+        if (feedbackCalPicker) { feedbackCalPicker.destroy(); feedbackCalPicker = null; }
+    }
+
+    function showFeedbackStep2(username, email) {
+        document.getElementById('feedbackStep1').style.display = 'none';
+        document.getElementById('feedbackStep2').style.display = 'block';
+
+        const badge = document.getElementById('feedbackIdentityBadge');
+        if (username)     { badge.textContent = `Submitting as: ${username}`; badge.style.display = 'block'; }
+        else if (email)   { badge.textContent = `Submitting for: ${email}`;   badge.style.display = 'block'; }
+        else              { badge.style.display = 'none'; }
+
+        document.getElementById('feedbackCityInput').value  = '';
+        document.getElementById('feedbackCityValue').value  = '';
+        document.getElementById('feedbackAdults').value     = '1';
+        document.getElementById('feedbackChildren').value   = '0';
+
+        // Instantiate calendar picker within event bracket
+        if (feedbackCalPicker) { feedbackCalPicker.destroy(); feedbackCalPicker = null; }
+        if (currentEvent) {
+            feedbackCalPicker = new CalendarPicker(
+                document.getElementById('feedbackCalendarContainer'),
+                currentEvent.earliest_date,
+                currentEvent.latest_date
+            );
+        }
+    }
+
+    function proceedWithEmail() {
+        const email = document.getElementById('feedbackEmail').value.trim();
+        if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
+        pendingFeedbackEmail = email;
+        showFeedbackStep2(null, email);
+    }
+
+    function openLoginFromFeedback() {
+        pendingFeedbackAction = true;
+        const loginForm = document.querySelector('#loginModal form');
+        let returnInput = loginForm.querySelector('input[name="return_to"]');
+        if (!returnInput) {
+            returnInput = document.createElement('input');
+            returnInput.type  = 'hidden';
+            returnInput.name  = 'return_to';
+            loginForm.appendChild(returnInput);
+        }
+        returnInput.value = window.location.pathname;
+        document.getElementById('feedbackFormModal').style.display = 'none';
+        showLogin();
     }
 
     async function submitFeedback() {
-        const city = document.getElementById('feedbackCity').value;
-        const start_date = document.getElementById('feedbackStartDate').value;
-        const end_date = document.getElementById('feedbackEndDate').value;
+        const city = document.getElementById('feedbackCityValue').value
+                     || document.getElementById('feedbackCityInput').value.trim();
+        if (!city) { alert('Please enter your departure city.'); return; }
 
-        if (!city || !start_date || !end_date) {
-            alert('Please fill in all fields');
-            return;
-        }
+        const periods = feedbackCalPicker ? feedbackCalPicker.getSelectedPeriods() : [];
+        if (!periods.length) { alert('Please select at least one available date on the calendar.'); return; }
+
+        const adults   = parseInt(document.getElementById('feedbackAdults').value, 10)   || 1;
+        const children = parseInt(document.getElementById('feedbackChildren').value, 10) || 0;
+
+        const payload = {
+            city,
+            adults,
+            children,
+            availability_periods: JSON.stringify(periods)
+        };
+        if (pendingFeedbackEmail) payload.attendee_email = pendingFeedbackEmail;
 
         try {
             const res = await fetch(`/api/events/${currentEventId}/feedback`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ city, start_date, end_date })
+                body: JSON.stringify(payload)
             });
             if (res.ok) {
                 alert('Details received — thank you.');
@@ -874,36 +1506,39 @@
         }
     }
 
-    // Check if we are on a group page
+    // ── Page load ──────────────────────────────────────────────────────────────
+
     window.onload = async () => {
-        // Auto-open create modal if redirected with ?create=1
-        if (new URLSearchParams(window.location.search).get('create') === '1') {
+        initCityAutocomplete('feedbackCityInput',  'feedbackCityValue',  'cityDropdown',          'cityAutocompleteWrapper');
+        initCityAutocomplete('organiserCityInput', 'organiserCityValue', 'organiserCityDropdown', 'organiserCityWrapper');
+
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get('create') === '1') {
             {% if username %}showCreateGroup();{% endif %}
         }
 
-        let eventId = '{{ group_id }}';
+        if (params.get('authed') === '1') {
+            window.history.replaceState({}, '', window.location.pathname);
+        }
 
+        let eventId = '{{ group_id }}';
         if (!eventId || eventId === 'None' || eventId === '') {
             const pathParts = window.location.pathname.split('/');
-            if (pathParts[1] === 'group' && pathParts[2]) {
-                eventId = pathParts[2];
-            }
+            if (pathParts[1] === 'group' && pathParts[2]) eventId = pathParts[2];
         }
 
         if (eventId && eventId !== 'None' && eventId !== '') {
             currentEventId = eventId;
             try {
-                const res = await fetch(`/api/events/${eventId}`);
+                const res   = await fetch(`/api/events/${eventId}`);
                 const event = await res.json();
                 if (event.name) {
-                    if (event.is_owner) {
-                        showEventDashboard(event);
-                    } else {
-                        showFeedbackForm(event);
-                    }
+                    if (event.is_owner) showEventDashboard(event);
+                    else showFeedbackForm(event);
                 }
             } catch (e) {
-                console.error("Failed to load event data", e);
+                console.error('Failed to load event data', e);
             }
         }
     };

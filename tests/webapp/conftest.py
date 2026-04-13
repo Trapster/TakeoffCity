@@ -2,6 +2,8 @@ import os
 
 os.environ.setdefault("SECRET_KEY", "test-secret-key")
 os.environ.setdefault("BACKEND_URL", "http://mock-backend")
+os.environ.setdefault("WEB_ADMIN_USERNAME", "testadmin")
+os.environ.setdefault("WEB_PASSWORD", "testpassword")
 
 import pytest
 from app import app as flask_app

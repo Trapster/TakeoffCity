@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = os.environ['SECRET_KEY']
 
 BACKEND = os.getenv('BACKEND_URL', 'http://backend:8000')
-ADMIN_USERS = {'jame'}
+ADMIN_USERS = {os.environ['WEB_ADMIN_USERNAME']}
 
 
 @app.route('/')
@@ -30,9 +30,11 @@ def login():
             timeout=5,
         )
     except Exception:
-        return "Service unavailable", 503
+        flash('Service unavailable. Please try again.', 'error')
+        return redirect(url_for('home'))
     if resp.status_code != 200:
-        return "Unauthorized", 401
+        flash('Invalid username or password.', 'error')
+        return redirect(url_for('home'))
     session['username'] = username
     try:
         http_client.post(
@@ -42,7 +44,15 @@ def login():
         )
     except Exception:
         pass
-    return redirect(url_for('home'))
+    return redirect(_safe_redirect(request.form.get('return_to', '')))
+
+
+def _safe_redirect(return_to: str) -> str:
+    """Return a safe redirect path after auth, defaulting to home."""
+    path = return_to.strip()
+    if path and path.startswith('/') and not path.startswith('//'):
+        return path + '?authed=1'
+    return url_for('home')
 
 
 @app.route('/signup', methods=['POST'])
@@ -80,7 +90,7 @@ def signup():
         )
     except Exception:
         pass
-    return redirect(url_for('home'))
+    return redirect(_safe_redirect(request.form.get('return_to', '')))
 
 
 @app.route('/logout')
@@ -201,7 +211,7 @@ def settings_delete():
 def group_page(group_id):
     if 'csrf_token' not in session:
         session['csrf_token'] = secrets.token_hex(32)
-    return render_template('index.html', username=session.get('username'), group_id=group_id, csrf_token=session['csrf_token'])
+    return render_template('group.html', username=session.get('username'), group_id=group_id, csrf_token=session['csrf_token'])
 
 
 @app.route('/admin')
@@ -211,7 +221,7 @@ def admin():
     return render_template('admin.html', username=session.get('username'))
 
 
-@app.route('/api/<path:path>', methods=['GET', 'POST', 'DELETE'])
+@app.route('/api/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def proxy(path):
     if path.startswith('internal/'):
         abort(404)

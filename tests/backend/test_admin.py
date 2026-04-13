@@ -1,10 +1,15 @@
+import os
+
+ADMIN_USER = os.environ["WEB_ADMIN_USERNAME"]
+
+
 def test_admin_stats_non_admin_forbidden(client):
     r = client.get("/admin/stats", headers={"X-Username": "notanadmin"})
     assert r.status_code == 403
 
 
 def test_admin_stats_returns_expected_structure(client):
-    r = client.get("/admin/stats", headers={"X-Username": "jame"})
+    r = client.get("/admin/stats", headers={"X-Username": ADMIN_USER})
     assert r.status_code == 200
     data = r.json()
     assert set(data.keys()) == {"all_time", "period", "series", "top_cities"}
@@ -14,7 +19,7 @@ def test_admin_stats_returns_expected_structure(client):
 
 
 def test_admin_stats_invalid_period_does_not_crash(client):
-    r = client.get("/admin/stats?period=99y", headers={"X-Username": "jame"})
+    r = client.get("/admin/stats?period=99y", headers={"X-Username": ADMIN_USER})
     assert r.status_code == 200
 
 

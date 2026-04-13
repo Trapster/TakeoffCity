@@ -102,3 +102,46 @@ def test_delete_event_unauthorized(client):
     event_id = create_r.json()["event_id"]
     r = client.delete(f"/events/{event_id}", headers={"X-Username": "bob"})
     assert r.status_code == 403
+
+
+def test_create_event_with_min_max_days(client):
+    create_r = client.post(
+        "/events",
+        json={"name": "Trip", "earliest_date": "2025-05-01", "latest_date": "2025-06-30",
+              "min_days": 5, "max_days": 7},
+        headers={"X-Username": "alice"},
+    )
+    assert create_r.status_code == 200
+    event_id = create_r.json()["event_id"]
+    r = client.get(f"/events/{event_id}", headers={"X-Username": "alice"})
+    assert r.json()["min_days"] == 5
+    assert r.json()["max_days"] == 7
+
+
+def test_create_event_organiser_attends_true(client):
+    create_r = client.post(
+        "/events",
+        json={"name": "Trip", "earliest_date": "2025-05-01", "latest_date": "2025-06-30",
+              "organiser_attends": True},
+        headers={"X-Username": "alice"},
+    )
+    event_id = create_r.json()["event_id"]
+    r = client.get(f"/events/{event_id}", headers={"X-Username": "alice"})
+    assert r.json()["organiser_attends"] is True
+
+
+def test_get_event_returns_new_fields(client):
+    create_r = client.post(
+        "/events",
+        json={"name": "Trip", "earliest_date": "2025-05-01", "latest_date": "2025-06-30"},
+        headers={"X-Username": "alice"},
+    )
+    event_id = create_r.json()["event_id"]
+    r = client.get(f"/events/{event_id}", headers={"X-Username": "alice"})
+    data = r.json()
+    assert "min_days" in data
+    assert "max_days" in data
+    assert "organiser_attends" in data
+    assert data["min_days"] is None
+    assert data["max_days"] is None
+    assert data["organiser_attends"] is False

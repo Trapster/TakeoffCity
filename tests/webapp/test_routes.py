@@ -1,3 +1,8 @@
+import os
+
+ADMIN_USER = os.environ["WEB_ADMIN_USERNAME"]
+
+
 def test_dashboard_redirects_unauthenticated(client):
     r = client.get("/dashboard")
     assert r.status_code == 302
@@ -6,7 +11,7 @@ def test_dashboard_redirects_unauthenticated(client):
 
 def test_dashboard_renders_authenticated(client):
     with client.session_transaction() as sess:
-        sess["username"] = "jame"
+        sess["username"] = ADMIN_USER
     r = client.get("/dashboard")
     assert r.status_code == 200
 
@@ -27,6 +32,6 @@ def test_admin_redirects_non_admin(client):
 
 def test_admin_renders_for_admin(client):
     with client.session_transaction() as sess:
-        sess["username"] = "jame"
+        sess["username"] = ADMIN_USER
     r = client.get("/admin")
     assert r.status_code == 200
