@@ -3,139 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | TakeoffCity</title>
+    <title>My Gatherings | TakeoffCity</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@600;700&family=Jost:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ff4742;
-            --primary-dark: #e63e39;
-            --text-main: #222;
-            --text-muted: #666;
-            --bg-light: #f8f9fa;
-            --white: #ffffff;
-            --border: #eee;
-            --success: #2ecc71;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --bg:           #F8F5F0;
+            --surface:      #FFFFFF;
+            --surface-2:    #F3EFE9;
+            --surface-3:    #EDE8E1;
+            --border:        rgba(28,24,20,0.09);
+            --border-strong: rgba(28,24,20,0.16);
+            --text:       #1C1814;
+            --text-dim:   rgba(28,24,20,0.65);
+            --text-muted: rgba(28,24,20,0.38);
+            --accent:      #0d4c3c;
+            --accent-dark: #0a3d30;
+            --accent-dim:  rgba(13,76,60,0.10);
+            --green:     #2D7D56;
+            --green-dim: rgba(45,125,86,0.10);
+            --danger:    #C0392B;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            background-color: var(--bg-light);
-            line-height: 1.5;
+            font-family: 'Jost', -apple-system, sans-serif;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
         }
 
-        .container {
+        /* ── Topbar ── */
+        .topbar {
+            background: rgba(248,245,240,0.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-inner {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
-
-        header {
-            background: white;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.25rem;
-            font-weight: 800;
+            font-family: 'Cormorant', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
             text-decoration: none;
-            color: var(--text-main);
+            color: var(--text);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .logo span { color: var(--accent); }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
         }
 
-        .logo span { color: var(--primary); }
+        .topbar-right a {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.15s;
+        }
+        .topbar-right a:hover { color: var(--text); }
 
+        .topbar-user {
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Buttons ── */
         .btn {
             padding: 0.5rem 1.25rem;
             border-radius: 99px;
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.03em;
             text-decoration: none;
-            transition: all 0.1s;
+            transition: all 0.15s;
             display: inline-block;
             border: none;
             cursor: pointer;
         }
 
         .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
+            background-color: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-1px);
         }
 
+        .btn-open {
+            background: var(--surface-3);
+            color: var(--text);
+            border: 1px solid var(--border-strong);
+        }
+        .btn-open:hover { background: var(--surface-2); }
+
+        .btn-danger-outline {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(192,57,43,0.3);
+        }
+        .btn-danger-outline:hover {
+            background: rgba(192,57,43,0.06);
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .page-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2rem;
+            letter-spacing: 0;
+        }
+
+        /* ── Event cards ── */
         .card {
-            background: white;
+            background: var(--surface);
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.4rem 1.5rem;
             border: 1px solid var(--border);
-            margin-bottom: 1rem;
+            margin-bottom: 0.85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1.5rem;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: rgba(13,76,60,0.22);
+            box-shadow: 0 4px 16px rgba(28,24,20,0.06);
         }
 
         .card-info h3 {
-            font-weight: 800;
+            font-family: 'Cormorant', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
             margin-bottom: 0.25rem;
         }
 
         .card-info p {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.82rem;
+            font-family: 'DM Mono', monospace;
+            font-weight: 400;
         }
 
         .status-badge {
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.65rem;
             border-radius: 99px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.68rem;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-family: 'DM Mono', monospace;
         }
 
-        .status-pending { background: #fff5f5; color: var(--primary); }
-        .status-done { background: #e6fffa; color: var(--success); }
+        .status-pending {
+            background: var(--accent-dim);
+            color: var(--accent);
+            border: 1px solid rgba(13,76,60,0.18);
+        }
+
+        .status-done {
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(45,125,86,0.2);
+        }
 
         .feedback-pill {
-            background: var(--bg-light);
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 400;
+            padding: 0.2rem 0.55rem;
+            border-radius: 5px;
             display: inline-block;
+            margin-top: 0.45rem;
+        }
+
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            color: var(--text-dim);
+            font-weight: 400;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .empty-state a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .empty-state a:hover { text-decoration: underline; }
+
+        .error-state {
+            color: var(--danger);
+            font-weight: 500;
+            padding: 2rem 0;
         }
     </style>
 </head>
 <body>
 
-    <div style="background: white; border-bottom: 1px solid var(--border);">
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem;">
-            <a href="/" class="logo">TAKEOFF<span>CITY</span></a>
-            <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <a href="/?create=1" class="btn btn-primary">New Group</a>
-                <span style="font-weight: 700; color: var(--text-muted);">{{ username }}</span>
-                <a href="/logout" style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); text-decoration: none;">Logout</a>
+    <div class="topbar">
+        <div class="topbar-inner">
+            <a href="/" class="logo">Takeoff<span>City</span></a>
+            <div class="topbar-right">
+                <a href="/?create=1" class="btn btn-primary">Plan a Gathering</a>
+                <span class="topbar-user">{{ username }}</span>
+                <a href="/settings">Settings</a>
+                <a href="/logout">Logout</a>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem; letter-spacing: -0.03em;">My Event Groups</h1>
-        
+        <h1 class="page-title">My Gatherings</h1>
         <div id="eventsList">
-            <p>Loading your events...</p>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Loading your gatherings...</p>
         </div>
     </div>
 
@@ -153,9 +282,9 @@
                 const res = await fetch('/api/events');
                 const events = await res.json();
                 const container = document.getElementById('eventsList');
-                
+
                 if (events.length === 0) {
-                    container.innerHTML = '<p style="color: var(--text-muted); font-weight: 500;">No groups yet. <a href="/?create=1" style="color: var(--primary); font-weight: 700; text-decoration: none;">Create your first one →</a></p>';
+                    container.innerHTML = '<div class="empty-state"><p>No gatherings yet. <a href="/?create=1">Plan your first one →</a></p></div>';
                     return;
                 }
 
@@ -163,29 +292,27 @@
                     <div class="card" id="event-card-${escHtml(event.id)}">
                         <div class="card-info">
                             <h3>${escHtml(event.name)}</h3>
-                            <p>${escHtml(event.earliest_date)} to ${escHtml(event.latest_date)}</p>
-                            <div class="feedback-pill">${escHtml(event.feedback_count)} Responses</div>
+                            <p>${escHtml(event.earliest_date)} → ${escHtml(event.latest_date)}</p>
+                            <div class="feedback-pill">${escHtml(event.feedback_count)} responses</div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="margin-bottom: 0.5rem;">
-                                <span class="status-badge ${event.calculated ? 'status-done' : 'status-pending'}">
-                                    ${event.calculated ? 'Calculated' : 'Pending'}
-                                </span>
-                            </div>
-                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                <a href="/group/${escHtml(event.id)}" class="btn" style="background: #222; color: white;">Open Group</a>
-                                <button onclick="deleteEvent('${escHtml(event.id)}')" class="btn" style="background: #fff; color: #ff4742; border: 1px solid #ff4742;">Delete</button>
+                        <div class="card-actions">
+                            <span class="status-badge ${event.calculated ? 'status-done' : 'status-pending'}">
+                                ${event.calculated ? 'Calculated' : 'Pending'}
+                            </span>
+                            <div class="card-buttons">
+                                <a href="/group/${escHtml(event.id)}" class="btn btn-open">View Details</a>
+                                <button onclick="deleteEvent('${escHtml(event.id)}')" class="btn btn-danger-outline">Delete</button>
                             </div>
                         </div>
                     </div>
                 `).join('');
             } catch (err) {
-                document.getElementById('eventsList').innerHTML = '<p style="color: red;">Error loading events.</p>';
+                document.getElementById('eventsList').innerHTML = '<p class="error-state">Error loading gatherings.</p>';
             }
         }
 
         async function deleteEvent(eventId) {
-            if (!confirm('Are you sure you want to delete this event group?')) return;
+            if (!confirm('Are you sure you want to delete this gathering?')) return;
 
             try {
                 const res = await fetch(`/api/events/${eventId}`, {
@@ -194,9 +321,8 @@
                 if (res.ok) {
                     const card = document.getElementById(`event-card-${eventId}`);
                     card.remove();
-                    // If no more cards, show empty message
                     if (document.getElementById('eventsList').children.length === 0) {
-                        document.getElementById('eventsList').innerHTML = '<p>No events found. Start by creating one!</p>';
+                        document.getElementById('eventsList').innerHTML = '<div class="empty-state"><p>No gatherings found. Start by creating one!</p></div>';
                     }
                 } else {
                     alert('Failed to delete event.');

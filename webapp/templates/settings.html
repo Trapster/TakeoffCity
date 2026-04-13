@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings | TakeoffCity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@600;700&family=Jost:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:           #F8F5F0;
+            --surface:      #FFFFFF;
+            --surface-2:    #F3EFE9;
+            --surface-3:    #EDE8E1;
+            --border:        rgba(28,24,20,0.09);
+            --border-strong: rgba(28,24,20,0.16);
+            --text:       #1C1814;
+            --text-dim:   rgba(28,24,20,0.65);
+            --text-muted: rgba(28,24,20,0.38);
+            --accent:      #0d4c3c;
+            --accent-dark: #0a3d30;
+            --green:     #2D7D56;
+            --danger:    #C0392B;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Jost', -apple-system, sans-serif;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: rgba(248,245,240,0.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cormorant', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .logo span { color: var(--accent); }
+
+        nav { display: flex; align-items: center; gap: 1.5rem; }
+        nav a {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.15s;
+        }
+        nav a:hover { color: var(--text); }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 99px;
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.03em;
+            text-decoration: none;
+            transition: all 0.15s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary { background-color: var(--accent); color: #fff; }
+        .btn-primary:hover { background-color: var(--accent-dark); }
+
+        .btn-danger { background-color: var(--danger); color: #fff; }
+        .btn-danger:hover { background-color: #a93226; }
+
+        .btn-cancel {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn-cancel:hover { color: var(--text); background: var(--surface-3); }
+
+        /* ── Container ── */
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        .page-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 1.75rem;
+        }
+
+        /* ── Flash messages ── */
+        .flash {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        .flash-success {
+            background: rgba(45,125,86,0.08);
+            color: var(--green);
+            border: 1px solid rgba(45,125,86,0.2);
+        }
+        .flash-error {
+            background: rgba(192,57,43,0.07);
+            color: var(--danger);
+            border: 1px solid rgba(192,57,43,0.18);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.75rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1.1rem;
+            box-shadow: 0 1px 4px rgba(28,24,20,0.04);
+        }
+
+        .card h2 {
+            font-family: 'Cormorant', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text);
+        }
+
+        .card-danger {
+            border-color: rgba(192,57,43,0.18);
+            background: rgba(192,57,43,0.03);
+        }
+        .card-danger h2 { color: var(--danger); }
+
+        /* ── Forms ── */
+        .form-group { margin-bottom: 1rem; }
+        .form-group:last-of-type { margin-bottom: 1.25rem; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--text-muted);
+            font-family: 'Jost', sans-serif;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.68rem 0.9rem;
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.93rem;
+            background: var(--surface-2);
+            color: var(--text);
+            transition: border-color 0.15s;
+        }
+        .form-control:focus { outline: none; border-color: var(--accent); }
+        .form-control::placeholder { color: var(--text-muted); }
+
+        .form-control[readonly] {
+            background: var(--surface-3);
+            color: var(--text-muted);
+            cursor: default;
+        }
+
+        /* ── Meta rows ── */
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .meta-row:last-child { border-bottom: none; }
+
+        .meta-label {
+            font-family: 'DM Mono', monospace;
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .meta-value {
+            font-family: 'DM Mono', monospace;
+            font-weight: 400;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        /* ── Delete modal ── */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(28,24,20,0.58);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(28,24,20,0.15);
+        }
+
+        .modal-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--danger);
+        }
+
+        .modal-sub {
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.65;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="/" class="logo">Takeoff<span>City</span></a>
+            <nav>
+                <a href="/dashboard">My Gatherings</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">Account Settings</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Account Info -->
+        <div class="card">
+            <h2>Your Account</h2>
+            <div class="meta-row">
+                <span class="meta-label">Username</span>
+                <span class="meta-value">{{ user_data.get('username', username) }}</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">Email</span>
+                <span class="meta-value">{{ user_data.get('email', '—') }}</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">Member since</span>
+                <span class="meta-value">{{ user_data.get('member_since', '—')[:10] }}</span>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="card">
+            <h2>Change Password</h2>
+            <form action="/settings/password" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" name="current_password" class="form-control" required autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password" id="newPassword" class="form-control" required minlength="8" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" name="confirm_password" id="confirmPassword" class="form-control" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="return checkPasswordMatch()">Update Password</button>
+            </form>
+        </div>
+
+        <!-- Change Email -->
+        <div class="card">
+            <h2>Change Email</h2>
+            <form action="/settings/email" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label>New Email</label>
+                    <input type="email" name="new_email" class="form-control" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label>Confirm with Password</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary">Update Email</button>
+            </form>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="card card-danger">
+            <h2>Danger Zone</h2>
+            <p style="font-size: 0.875rem; color: var(--text-dim); margin-bottom: 1.25rem; line-height: 1.65;">
+                Permanently deletes your account and all event groups you created. This cannot be undone.
+                Per our <a href="/privacy" style="color: var(--danger); text-decoration: none;">Privacy Policy</a>, all your personal data will be erased.
+            </p>
+            <button onclick="document.getElementById('deleteModal').style.display='flex'" class="btn btn-danger">Delete My Account</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Delete Account</h2>
+            <p class="modal-sub">
+                This will permanently delete your account and all your event groups. Enter your password to confirm.
+            </p>
+            <form action="/settings/delete" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" required autocomplete="current-password" placeholder="Your current password">
+                </div>
+                <button type="submit" class="btn btn-danger" style="width: 100%;">Yes, delete my account</button>
+            </form>
+            <button onclick="document.getElementById('deleteModal').style.display='none'" class="btn btn-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function checkPasswordMatch() {
+            const pw = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            if (pw !== confirm) {
+                alert('New passwords do not match.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,5 +1,7 @@
 import asyncio
+import hashlib
 import random
+import secrets
 import uuid
 import os
 from datetime import datetime, timedelta, date
@@ -49,7 +51,35 @@ class UserActivityDB(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class UserDB(Base):
+    __tablename__ = "users"
+    id                = Column(Integer, primary_key=True, index=True)
+    username          = Column(String, unique=True, index=True, nullable=False)
+    email             = Column(String, unique=True, index=True, nullable=False)
+    password_hash     = Column(String, nullable=False)
+    created_at        = Column(DateTime, default=datetime.utcnow)
+    terms_accepted_at = Column(DateTime, nullable=False)
+    is_admin          = Column(Boolean, default=False)
+
+
 Base.metadata.create_all(bind=engine)
+
+
+# ── Password helpers ───────────────────────────────────────────────────────────
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_hex(16)
+    dk = hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 260_000)
+    return f"{salt}:{dk.hex()}"
+
+
+def verify_password(password: str, stored: str) -> bool:
+    try:
+        salt, dk_hex = stored.split(':', 1)
+        dk = hashlib.pbkdf2_hmac('sha256', password.encode(), salt.encode(), 260_000)
+        return secrets.compare_digest(dk.hex(), dk_hex)
+    except Exception:
+        return False
 
 app = FastAPI(title="TakeoffCity Backend")
 
@@ -103,6 +133,34 @@ class FeedbackCreate(BaseModel):
 class ActivityCreate(BaseModel):
     username: str
     action: str
+
+
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+class AuthVerify(BaseModel):
+    username: str
+    password: str
+
+
+class PasswordUpdate(BaseModel):
+    username: str
+    current_password: str
+    new_password: str
+
+
+class EmailUpdate(BaseModel):
+    username: str
+    password: str
+    new_email: str
+
+
+class AccountDelete(BaseModel):
+    username: str
+    password: str
 
 
 FUNNY_PHRASES = [
@@ -242,6 +300,75 @@ async def calculate_event(event_id: str, db=Depends(get_db)):
 @app.post("/internal/activity")
 async def record_activity(activity: ActivityCreate, db=Depends(get_db)):
     db.add(UserActivityDB(username=activity.username, action=activity.action))
+    db.commit()
+    return {"ok": True}
+
+
+@app.post("/internal/users", status_code=201)
+async def create_user(data: UserCreate, db=Depends(get_db)):
+    if db.query(UserDB).filter(UserDB.username == data.username).first():
+        raise HTTPException(status_code=409, detail="Username already taken")
+    if db.query(UserDB).filter(UserDB.email == data.email).first():
+        raise HTTPException(status_code=409, detail="Email already registered")
+    db.add(UserDB(
+        username=data.username,
+        email=data.email,
+        password_hash=hash_password(data.password),
+        terms_accepted_at=datetime.utcnow(),
+    ))
+    db.commit()
+    return {"ok": True}
+
+
+@app.post("/internal/auth")
+async def verify_auth(data: AuthVerify, db=Depends(get_db)):
+    user = db.query(UserDB).filter(UserDB.username == data.username).first()
+    if not user or not verify_password(data.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    return {"ok": True, "username": user.username}
+
+
+@app.get("/internal/users/me")
+async def get_user_me(username: str, db=Depends(get_db)):
+    user = db.query(UserDB).filter(UserDB.username == username).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "username": user.username,
+        "email": user.email,
+        "member_since": user.created_at.isoformat(),
+    }
+
+
+@app.put("/internal/users/me/password")
+async def update_password(data: PasswordUpdate, db=Depends(get_db)):
+    user = db.query(UserDB).filter(UserDB.username == data.username).first()
+    if not user or not verify_password(data.current_password, user.password_hash):
+        raise HTTPException(status_code=403, detail="Invalid current password")
+    user.password_hash = hash_password(data.new_password)
+    db.commit()
+    return {"ok": True}
+
+
+@app.put("/internal/users/me/email")
+async def update_email(data: EmailUpdate, db=Depends(get_db)):
+    user = db.query(UserDB).filter(UserDB.username == data.username).first()
+    if not user or not verify_password(data.password, user.password_hash):
+        raise HTTPException(status_code=403, detail="Invalid password")
+    if db.query(UserDB).filter(UserDB.email == data.new_email, UserDB.username != data.username).first():
+        raise HTTPException(status_code=409, detail="Email already in use")
+    user.email = data.new_email
+    db.commit()
+    return {"ok": True}
+
+
+@app.delete("/internal/users/me")
+async def delete_user(data: AccountDelete, db=Depends(get_db)):
+    user = db.query(UserDB).filter(UserDB.username == data.username).first()
+    if not user or not verify_password(data.password, user.password_hash):
+        raise HTTPException(status_code=403, detail="Invalid password")
+    db.query(EventDB).filter(EventDB.creator_username == data.username).delete()
+    db.delete(user)
     db.commit()
     return {"ok": True}
 
