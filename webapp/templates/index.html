@@ -3,34 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TakeoffCity | Multi-Origin Group Travel Coordination</title>
+    <title>TakeoffCity | Group Travel, Thoughtfully Planned</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@600;700&family=Jost:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ff4742; /* Nomad Red */
-            --primary-dark: #e63e39;
-            --text-main: #222;
-            --text-muted: #666;
-            --bg-light: #f8f9fa;
-            --white: #ffffff;
-            --border: #eee;
-            --success: #2ecc71;
-            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --bg:           #F8F5F0;
+            --surface:      #FFFFFF;
+            --surface-2:    #F3EFE9;
+            --surface-3:    #EDE8E1;
+            --border:        rgba(28,24,20,0.09);
+            --border-strong: rgba(28,24,20,0.16);
+            --text:       #1C1814;
+            --text-dim:   rgba(28,24,20,0.65);
+            --text-muted: rgba(28,24,20,0.38);
+            --accent:      #0d4c3c;
+            --accent-dark: #0a3d30;
+            --accent-dim:  rgba(13,76,60,0.10);
+            --amber:     #3A6EA8;
+            --amber-dim: rgba(58,110,168,0.12);
+            --green:     #2D7D56;
+            --green-dim: rgba(45,125,86,0.10);
+            --blue:      #3A6EA8;
+            --danger:    #C0392B;
+            --primary:   #0d4c3c;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text-main);
-            line-height: 1.5;
-            background-color: var(--white);
+            font-family: 'Jost', -apple-system, sans-serif;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.55;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -40,32 +46,34 @@
             padding: 0 1.5rem;
         }
 
-        /* Top Bar / Navigation */
+        /* ── Header ── */
         header {
             padding: 1rem 0;
             border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             position: sticky;
             top: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(248,245,240,0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
         }
 
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-main);
-            text-decoration: none;
+        .header-inner {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            letter-spacing: -0.03em;
         }
 
-        .logo span { color: var(--primary); }
+        .logo {
+            font-family: 'Cormorant', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .logo span { color: var(--accent); }
 
         nav {
             display: flex;
@@ -75,93 +83,126 @@
 
         nav a {
             text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: color 0.1s;
+            color: var(--text-dim);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.15s;
         }
+        nav a:hover { color: var(--text); }
 
-        nav a:hover { color: var(--primary); }
-
+        /* ── Buttons ── */
         .btn {
             padding: 0.5rem 1.25rem;
-            border-radius: 99px; /* Pill shape like nomads */
-            font-weight: 700;
-            font-size: 0.85rem;
+            border-radius: 99px;
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.03em;
             text-decoration: none;
-            transition: all 0.1s;
+            transition: all 0.15s;
             display: inline-block;
             border: none;
             cursor: pointer;
         }
 
         .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
+            background-color: var(--accent);
+            color: #fff;
         }
-
         .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: scale(1.02);
+            background-color: var(--accent-dark);
+            transform: translateY(-1px);
         }
 
-        /* Hero */
+        .btn-cancel {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn-cancel:hover {
+            color: var(--text);
+            background: var(--surface-3);
+        }
+
+        /* ── Flash bar ── */
+        .flash-bar {
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+            padding: 0.65rem 1.5rem;
+            text-align: center;
+        }
+        .flash-bar .error  { font-weight: 600; font-size: 0.875rem; color: var(--danger); }
+        .flash-bar .success { font-weight: 600; font-size: 0.875rem; color: var(--green); }
+
+        /* ── Hero ── */
         .hero {
-            padding: 4rem 0 3rem;
+            padding: 6rem 0 5rem;
             text-align: center;
             border-bottom: 1px solid var(--border);
+            background:
+                radial-gradient(ellipse at 30% 0%, rgba(13,76,60,0.05) 0%, transparent 55%),
+                radial-gradient(ellipse at 75% 110%, rgba(13,76,60,0.03) 0%, transparent 50%),
+                var(--bg);
+            position: relative;
         }
 
-        h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            margin-bottom: 1rem;
-            line-height: 1;
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(13,76,60,0.28), transparent);
         }
 
-        .hero p {
-            font-size: 1.15rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            font-weight: 500;
+        .hero-eyebrow {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
         }
 
-        .live-stats {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #fff5f5;
-            color: var(--primary);
-            padding: 0.4rem 1rem;
-            border-radius: 99px;
-            font-size: 0.85rem;
+        .hero h1 {
+            font-family: 'Cormorant', serif;
+            font-size: clamp(2.6rem, 6vw, 4.5rem);
             font-weight: 700;
-            margin-bottom: 2rem;
-            border: 1px solid #ffe3e3;
+            letter-spacing: -0.01em;
+            line-height: 1.08;
+            margin-bottom: 1.25rem;
+            color: var(--text);
         }
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 2s infinite;
+        .hero h1 span { color: var(--accent); }
+
+        .hero > .container > p {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            max-width: 540px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
         }
 
-        /* High Density Cards Section */
-        .preview-grid {
-            padding: 4rem 0;
-            background: var(--bg-light);
+        .btn-hero {
+            padding: 0.85rem 2.5rem;
+            font-size: 0.95rem;
         }
+
+        /* ── Preview grid ── */
+        .preview-grid { padding: 5rem 0; }
 
         .section-header {
             display: flex;
@@ -170,33 +211,62 @@
             margin-bottom: 2rem;
         }
 
-        .section-header h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+        .section-eyebrow {
+            font-family: 'Jost', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
         }
+
+        .section-header h2 {
+            font-family: 'Cormorant', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text);
+        }
+
+        .section-header > div > p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.3rem;
+        }
+
+        .section-header > a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: opacity 0.15s;
+        }
+        .section-header > a:hover { opacity: 0.72; }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .city-card {
-            background: var(--white);
+            background: var(--surface);
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border);
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
             position: relative;
         }
-
         .city-card:hover {
-            border-color: #ccc;
+            border-color: rgba(13,76,60,0.22);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(28,24,20,0.08);
         }
 
         .city-img {
-            height: 180px;
+            height: 185px;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -208,672 +278,763 @@
             left: 0;
             right: 0;
             padding: 1rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            background: linear-gradient(transparent, rgba(0,0,0,0.75));
             color: white;
         }
 
         .city-name {
-            font-weight: 800;
-            font-size: 1.25rem;
-            margin-bottom: 0.2rem;
+            font-family: 'Cormorant', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 0.01em;
         }
 
-        .city-stats {
-            padding: 1rem;
-        }
+        .city-stats { padding: 0.9rem 1rem; }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 600;
+            align-items: center;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.82rem;
         }
-
-        .stat-label { color: var(--text-muted); }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-label { color: var(--text-muted); font-weight: 500; }
 
         .badge {
-            padding: 0.2rem 0.5rem;
+            padding: 0.15rem 0.45rem;
             border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 800;
+            font-size: 0.68rem;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-family: 'DM Mono', monospace;
         }
-
-        .badge-green { background: #e6fffa; color: #2ecc71; }
-        .badge-blue { background: #ebf8ff; color: #3182ce; }
+        .badge-green { background: var(--green-dim); color: var(--green); }
+        .badge-blue  { background: rgba(58,110,168,0.10); color: var(--blue); }
 
         .score-box {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--success);
-            color: white;
-            padding: 0.3rem 0.6rem;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 0.9rem;
+            top: 0.85rem;
+            right: 0.85rem;
+            background: var(--amber);
+            color: #ffffff;
+            padding: 0.22rem 0.55rem;
+            border-radius: 5px;
+            font-family: 'DM Mono', monospace;
+            font-weight: 500;
+            font-size: 0.8rem;
         }
 
-        /* Utility Section */
+        /* ── Features ── */
         .utility-features {
             padding: 5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
         }
 
         .feature-item {
             display: flex;
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-            align-items: flex-start;
+            flex-direction: column;
+            gap: 0.9rem;
         }
 
         .feature-icon {
-            font-size: 2rem;
-            background: var(--bg-light);
-            width: 60px;
-            height: 60px;
+            width: 44px;
+            height: 44px;
+            background: var(--amber-dim);
+            border: 1px solid rgba(58,110,168,0.22);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            flex-shrink: 0;
+            font-size: 1.2rem;
         }
 
         .feature-content h3 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
+            font-family: 'Cormorant', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.3rem;
         }
 
         .feature-content p {
-            color: var(--text-muted);
-            font-weight: 500;
+            color: var(--text-dim);
+            font-size: 0.875rem;
+            line-height: 1.7;
+            font-weight: 400;
         }
 
-        /* Footer */
+        /* ── Footer ── */
         footer {
             padding: 3rem 0;
             border-top: 1px solid var(--border);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
         }
 
-        .footer-links {
+        .footer-inner {
             display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
             gap: 2rem;
-            margin-top: 1rem;
         }
 
-        .footer-links a {
-            color: var(--text-main);
-            text-decoration: none;
+        footer p {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.25rem; }
-            .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        .footer-copy {
+            margin-top: 2.5rem;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-family: 'DM Mono', monospace;
         }
-        /* Modal Styles */
+
+        /* ── Modals ── */
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(28,24,20,0.58);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
         }
 
         .modal-content {
-            background: white;
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 16px;
             width: 100%;
             max-width: 400px;
+            box-shadow: 0 20px 60px rgba(28,24,20,0.15);
         }
 
-        .form-group {
-            margin-bottom: 1rem;
+        .modal-title {
+            font-family: 'Cormorant', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            letter-spacing: 0;
         }
+
+        .form-group { margin-bottom: 1rem; }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+            margin-bottom: 0.35rem;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: var(--text-muted);
+            font-family: 'Jost', sans-serif;
         }
 
         .form-control {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--border-strong);
             border-radius: 8px;
-            font-family: inherit;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.93rem;
+            background: var(--surface-2);
+            color: var(--text);
+            transition: border-color 0.15s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .form-control::placeholder { color: var(--text-muted); }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] { accent-color: var(--accent); }
+
+        .modal-sub {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .modal-link {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .modal-link:hover { text-decoration: underline; }
+
+        .stat-highlight-box {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-highlight-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 3rem;
+            font-weight: 400;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-highlight-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-family: 'Jost', sans-serif;
         }
 
         #calculation-log {
-            background: #111;
-            color: #2ecc71;
+            background: var(--surface-2);
+            color: var(--text-dim);
             padding: 1rem;
             border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            min-height: 120px;
+            border: 1px solid var(--border-strong);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            min-height: 130px;
             white-space: pre-wrap;
-            line-height: 1.6;
+            line-height: 1.75;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.25rem; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .features-grid { grid-template-columns: 1fr; gap: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div style="background: #fff5f5; border-bottom: 1px solid #ffe3e3; padding: 0.75rem 1.5rem; text-align: center;">
-                {% for category, message in messages %}
-                    <span style="font-weight: 600; font-size: 0.9rem; color: {% if category == 'error' %}var(--primary){% else %}#2ecc71{% endif %};">{{ message }}</span>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
-    <header>
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="/" class="logo">TAKEOFF<span>CITY</span></a>
-            <nav>
-                {% if username %}
-                    <a href="/dashboard" style="font-weight: 700; color: var(--primary);">My Dashboard</a>
-                    <span style="font-weight: 700; color: var(--text-muted);">{{ username }}</span>
-                    <a href="/logout" style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); text-decoration: none;">Logout</a>
-                {% else %}
-                    <a href="#" onclick="showLogin()" class="btn btn-primary">Login</a>
-                {% endif %}
-            </nav>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-bar">
+            {% for category, message in messages %}
+                <span class="{{ category }}">{{ message }}</span>
+            {% endfor %}
         </div>
-    </header>
+    {% endif %}
+{% endwith %}
 
-    <section class="hero">
-        <div class="container">
-            <h1>The meeting point for <span>distributed people.</span></h1>
-            <p>Gather your team or friends from anywhere. We find the most convenient, cost-effective destinations for everyone to meet.</p>
-            <div style="display: flex; justify-content: center; gap: 1rem;">
-                {% if username %}
-                    <button onclick="showCreateGroup()" class="btn btn-primary" style="padding: 0.8rem 2.5rem; font-size: 1rem;">Create a Group</button>
-                {% else %}
-                    <button onclick="showLogin()" class="btn btn-primary" style="padding: 0.8rem 2.5rem; font-size: 1rem;">Get Started</button>
-                {% endif %}
-            </div>
-        </div>
-    </section>
+<header>
+    <div class="container header-inner">
+        <a href="/" class="logo">Takeoff<span>City</span></a>
+        <nav>
+            {% if username %}
+                <a href="/dashboard" style="color: var(--accent); font-weight: 600;">My Gatherings</a>
+                <span style="font-weight: 500; font-size: 0.875rem; color: var(--text-muted);">{{ username }}</span>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="#" onclick="showLogin()" class="btn btn-primary">Sign In</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem;">Sign In</h2>
-            <form action="/login" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Username" required autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="Password" required autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
-            </form>
-            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
-                No account? <a href="#" onclick="switchToSignup()" style="color: var(--primary); font-weight: 700; text-decoration: none;">Sign up</a>
-            </p>
-            <button onclick="hideLogin()" class="btn" style="width: 100%; margin-top: 0.5rem; background: #eee;">Cancel</button>
+<section class="hero">
+    <div class="container">
+        <div class="hero-eyebrow">Trusted by discerning groups worldwide</div>
+        <h1>Where every guest arrives at<br><span>exactly the right place.</span></h1>
+        <p>From executive retreats to milestone celebrations, TakeoffCity finds the destination where your whole group can arrive with ease, stay comfortably, and focus on what matters.</p>
+        <div class="hero-actions">
+            {% if username %}
+                <button onclick="showCreateGroup()" class="btn btn-primary btn-hero">Plan Your Gathering</button>
+            {% else %}
+                <button onclick="showLogin()" class="btn btn-primary btn-hero">Get Started</button>
+            {% endif %}
         </div>
     </div>
+</section>
 
-    <!-- Signup Modal -->
-    <div id="signupModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem;">Create Account</h2>
-            <form action="/signup" method="POST" onsubmit="return validateSignup(this)">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="your_username" required autocomplete="username" pattern="[A-Za-z0-9_\-]{3,30}" title="3–30 characters: letters, numbers, _ or -">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" id="signupPassword" class="form-control" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password">
-                </div>
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <input type="password" name="confirm_password" id="signupConfirm" class="form-control" placeholder="Repeat password" required autocomplete="new-password">
-                </div>
-                <div class="form-group" style="display: flex; align-items: flex-start; gap: 0.75rem;">
-                    <input type="checkbox" id="tosCheckbox" required style="margin-top: 0.2rem; width: auto; flex-shrink: 0;">
-                    <label for="tosCheckbox" style="font-weight: 500; font-size: 0.85rem; color: var(--text-muted); cursor: pointer;">
-                        I agree to the <a href="/terms" target="_blank" style="color: var(--primary);">Terms of Service</a> and <a href="/privacy" target="_blank" style="color: var(--primary);">Privacy Policy</a>. I understand my data is stored to provide this service and can be deleted at any time from Account Settings.
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
-            </form>
-            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
-                Already have an account? <a href="#" onclick="switchToLogin()" style="color: var(--primary); font-weight: 700; text-decoration: none;">Sign in</a>
-            </p>
-            <button onclick="hideSignup()" class="btn" style="width: 100%; margin-top: 0.5rem; background: #eee;">Cancel</button>
-        </div>
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Sign In</h2>
+        <form action="/login" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="your_username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+        </form>
+        <p class="modal-sub">No account? <a href="#" onclick="switchToSignup()" class="modal-link">Sign up</a></p>
+        <button onclick="hideLogin()" class="btn btn-cancel">Cancel</button>
     </div>
+</div>
 
-    <!-- Create Group Modal -->
-    <div id="createGroupModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem;">Create Group</h2>
+<!-- Signup Modal -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Create Account</h2>
+        <form action="/signup" method="POST" onsubmit="return validateSignup(this)">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <div class="form-group">
-                <label>Group Name</label>
-                <input type="text" id="groupName" class="form-control" placeholder="The Best Offsite">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="your_username" required autocomplete="username" pattern="[A-Za-z0-9_\-]{3,30}" title="3–30 characters: letters, numbers, _ or -">
             </div>
             <div class="form-group">
-                <label>Earliest Date</label>
-                <input type="date" id="earliestDate" class="form-control">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" placeholder="you@example.com" required autocomplete="email">
             </div>
             <div class="form-group">
-                <label>Latest Date</label>
-                <input type="date" id="latestDate" class="form-control">
+                <label>Password</label>
+                <input type="password" name="password" id="signupPassword" class="form-control" placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password">
             </div>
-            <button onclick="submitGroup()" class="btn btn-primary" style="width: 100%;">Create Group</button>
-            <button onclick="hideCreateGroup()" class="btn" style="width: 100%; margin-top: 0.5rem; background: #eee;">Cancel</button>
-        </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password" id="signupConfirm" class="form-control" placeholder="Repeat password" required autocomplete="new-password">
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <input type="checkbox" id="tosCheckbox" required style="margin-top: 0.25rem; width: auto; flex-shrink: 0;">
+                <label for="tosCheckbox" style="font-weight: 400; font-size: 0.82rem; color: var(--text-dim); cursor: pointer; text-transform: none; letter-spacing: 0;">
+                    I agree to the <a href="/terms" target="_blank" class="modal-link">Terms of Service</a> and <a href="/privacy" target="_blank" class="modal-link">Privacy Policy</a>. I understand my data is stored to provide this service and can be deleted at any time from Account Settings.
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+        </form>
+        <p class="modal-sub">Already have an account? <a href="#" onclick="switchToLogin()" class="modal-link">Sign in</a></p>
+        <button onclick="hideSignup()" class="btn btn-cancel">Cancel</button>
     </div>
+</div>
 
-    <!-- Share Link Modal -->
-    <div id="shareLinkModal" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 1.5rem;">Group Created!</h2>
-            <p style="margin-bottom: 1rem;">Share this unique link with your team:</p>
-            <div class="form-group">
-                <input type="text" id="shareLinkInput" class="form-control" readonly>
-            </div>
-            <button onclick="copyShareLink()" class="btn btn-primary" style="width: 100%;">Copy Link</button>
-            <button onclick="hideShareLink()" class="btn" style="width: 100%; margin-top: 0.5rem; background: #eee;">Close</button>
+<!-- Create Group Modal -->
+<div id="createGroupModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Plan a Gathering</h2>
+        <div class="form-group">
+            <label>Gathering Name</label>
+            <input type="text" id="groupName" class="form-control" placeholder="Q3 Leadership Retreat">
         </div>
-    </div>
-
-    <!-- Event Dashboard Modal -->
-    <div id="eventDashboardModal" class="modal">
-        <div class="modal-content">
-            <h2 id="dashEventName" style="margin-bottom: 0.5rem;">Group Name</h2>
-            <p id="dashEventDates" style="color: var(--text-muted); margin-bottom: 1.5rem;">Dates</p>
-            
-            <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 12px; text-align: center; margin-bottom: 1.5rem; border: 1px solid var(--border);">
-                <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);" id="feedbackCount">0</div>
-                <div style="font-weight: 700; font-size: 0.9rem; color: var(--text-muted);">FEEDBACK RESPONSES</div>
-            </div>
-
-            <button id="calculateBtn" onclick="triggerCalculation()" class="btn btn-primary" style="width: 100%; padding: 1rem;">Calculate Best Destination</button>
-            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
-                Wait for more feedback or calculate now.
-            </p>
-            <button onclick="hideEventDashboard()" class="btn" style="width: 100%; margin-top: 1rem; background: #eee;">Close Dashboard</button>
+        <div class="form-group">
+            <label>Earliest Date</label>
+            <input type="date" id="earliestDate" class="form-control">
         </div>
-    </div>
-
-    <!-- Calculation Modal -->
-    <div id="calculationModal" class="modal">
-        <div class="modal-content" style="max-width: 520px;">
-            <h2 style="margin-bottom: 0.5rem;">Finding Your Destination</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Hang tight while we crunch the numbers.</p>
-            <div id="calculation-log"></div>
-            <button id="calcCloseBtn" onclick="hideCalculation()" class="btn" style="width: 100%; margin-top: 1rem; background: #eee; display: none;">Close</button>
+        <div class="form-group">
+            <label>Latest Date</label>
+            <input type="date" id="latestDate" class="form-control">
         </div>
+        <button onclick="submitGroup()" class="btn btn-primary" style="width: 100%;">Begin Planning</button>
+        <button onclick="hideCreateGroup()" class="btn btn-cancel">Cancel</button>
     </div>
+</div>
 
-    <!-- Feedback Form Modal -->
-    <div id="feedbackFormModal" class="modal">
-        <div class="modal-content">
-            <h2 id="feedbackEventName" style="margin-bottom: 0.5rem;">Join Group</h2>
-            <p id="feedbackEventDates" style="color: var(--text-muted); margin-bottom: 1.5rem;">Event Dates</p>
-            <div class="form-group">
-                <label>Your Origin City</label>
-                <input type="text" id="feedbackCity" class="form-control" placeholder="e.g. London">
-            </div>
-            <div class="form-group">
-                <label>Your Start Date</label>
-                <input type="date" id="feedbackStartDate" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Your End Date</label>
-                <input type="date" id="feedbackEndDate" class="form-control">
-            </div>
-            <button onclick="submitFeedback()" class="btn btn-primary" style="width: 100%; padding: 1rem;">Submit Availability</button>
-            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
-                Help the group find the best meeting point!
-            </p>
-            <button onclick="hideFeedbackForm()" class="btn" style="width: 100%; margin-top: 1rem; background: #eee;">Cancel</button>
+<!-- Share Link Modal -->
+<div id="shareLinkModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Your Gathering Is Ready</h2>
+        <p style="margin-bottom: 1rem; font-size: 0.9rem; color: var(--text-dim);">Share this link with your guests to collect their travel details:</p>
+        <div class="form-group">
+            <input type="text" id="shareLinkInput" class="form-control" readonly style="font-family: 'DM Mono', monospace; font-size: 0.82rem;">
         </div>
+        <button onclick="copyShareLink()" class="btn btn-primary" style="width: 100%;">Copy Link</button>
+        <button onclick="hideShareLink()" class="btn btn-cancel">Close</button>
     </div>
+</div>
 
-    <script>
-        let currentEventId = null;
+<!-- Event Dashboard Modal -->
+<div id="eventDashboardModal" class="modal">
+    <div class="modal-content">
+        <h2 id="dashEventName" class="modal-title">Group Name</h2>
+        <p id="dashEventDates" style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.875rem;">Dates</p>
 
-        function showLogin() {
-            document.getElementById('loginModal').style.display = 'flex';
+        <div class="stat-highlight-box">
+            <div class="stat-highlight-num" id="feedbackCount">0</div>
+            <div class="stat-highlight-label">Responses Received</div>
+        </div>
+
+        <button id="calculateBtn" onclick="triggerCalculation()" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Calculate Best Destination</button>
+        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">Wait for more responses or calculate now.</p>
+        <button onclick="hideEventDashboard()" class="btn btn-cancel" style="margin-top: 1rem;">Close</button>
+    </div>
+</div>
+
+<!-- Calculation Modal -->
+<div id="calculationModal" class="modal">
+    <div class="modal-content" style="max-width: 520px;">
+        <h2 class="modal-title">Finding Your Destination</h2>
+        <p style="color: var(--text-dim); font-size: 0.875rem; margin-bottom: 1rem;">Searching connections and fares for your group — this takes just a moment.</p>
+        <div id="calculation-log"></div>
+        <button id="calcCloseBtn" onclick="hideCalculation()" class="btn btn-cancel" style="margin-top: 1rem; display: none;">Close</button>
+    </div>
+</div>
+
+<!-- Feedback Form Modal -->
+<div id="feedbackFormModal" class="modal">
+    <div class="modal-content">
+        <h2 id="feedbackEventName" class="modal-title">You're Invited</h2>
+        <p id="feedbackEventDates" style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.875rem;">Planning Window</p>
+        <div class="form-group">
+            <label>Your Departure City</label>
+            <input type="text" id="feedbackCity" class="form-control" placeholder="e.g. London">
+        </div>
+        <div class="form-group">
+            <label>Available From</label>
+            <input type="date" id="feedbackStartDate" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Available Until</label>
+            <input type="date" id="feedbackEndDate" class="form-control">
+        </div>
+        <button onclick="submitFeedback()" class="btn btn-primary" style="width: 100%; padding: 0.9rem;">Confirm My Details</button>
+        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">Your response helps everyone arrive with ease.</p>
+        <button onclick="hideFeedbackForm()" class="btn btn-cancel" style="margin-top: 1rem;">Cancel</button>
+    </div>
+</div>
+
+<script>
+    let currentEventId = null;
+
+    function showLogin() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
+    function hideLogin() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+    function showSignup() {
+        document.getElementById('signupModal').style.display = 'flex';
+    }
+    function hideSignup() {
+        document.getElementById('signupModal').style.display = 'none';
+    }
+    function switchToSignup() {
+        hideLogin();
+        showSignup();
+    }
+    function switchToLogin() {
+        hideSignup();
+        showLogin();
+    }
+    function validateSignup(form) {
+        const pw = document.getElementById('signupPassword').value;
+        const confirm = document.getElementById('signupConfirm').value;
+        if (pw !== confirm) {
+            alert('Passwords do not match.');
+            return false;
         }
-        function hideLogin() {
-            document.getElementById('loginModal').style.display = 'none';
+        return true;
+    }
+    function showCreateGroup() {
+        document.getElementById('createGroupModal').style.display = 'flex';
+    }
+    function hideCreateGroup() {
+        document.getElementById('createGroupModal').style.display = 'none';
+    }
+    function showShareLink(link) {
+        document.getElementById('shareLinkInput').value = link;
+        document.getElementById('shareLinkModal').style.display = 'flex';
+    }
+    function hideShareLink() {
+        document.getElementById('shareLinkModal').style.display = 'none';
+    }
+    function showEventDashboard(event) {
+        document.getElementById('dashEventName').innerText = event.name;
+        document.getElementById('dashEventDates').innerText = `${event.earliest_date} to ${event.latest_date}`;
+        document.getElementById('feedbackCount').innerText = event.feedback_count;
+        document.getElementById('eventDashboardModal').style.display = 'flex';
+    }
+    function hideEventDashboard() {
+        document.getElementById('eventDashboardModal').style.display = 'none';
+    }
+
+    function copyShareLink() {
+        const copyText = document.getElementById("shareLinkInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(copyText.value).then(() => {
+                alert("Link copied to clipboard!");
+            });
+        } else {
+            document.execCommand("copy");
+            alert("Link copied to clipboard! (fallback)");
         }
-        function showSignup() {
-            document.getElementById('signupModal').style.display = 'flex';
+    }
+
+    async function submitGroup() {
+        const name = document.getElementById('groupName').value;
+        const earliest_date = document.getElementById('earliestDate').value;
+        const latest_date = document.getElementById('latestDate').value;
+
+        if (!name || !earliest_date || !latest_date) {
+            alert('Please fill in all fields');
+            return;
         }
-        function hideSignup() {
-            document.getElementById('signupModal').style.display = 'none';
+
+        hideCreateGroup();
+        try {
+            const eventRes = await fetch('/api/events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, earliest_date, latest_date, details: {} })
+            });
+            const eventData = await eventRes.json();
+            currentEventId = eventData.event_id;
+            const dynamicShareLink = `${window.location.origin}/group/${eventData.event_id}`;
+            showShareLink(dynamicShareLink);
+        } catch (err) {
+            alert("Error creating event: " + err.message);
         }
-        function switchToSignup() {
-            hideLogin();
-            showSignup();
-        }
-        function switchToLogin() {
-            hideSignup();
-            showLogin();
-        }
-        function validateSignup(form) {
-            const pw = document.getElementById('signupPassword').value;
-            const confirm = document.getElementById('signupConfirm').value;
-            if (pw !== confirm) {
-                alert('Passwords do not match.');
-                return false;
+    }
+
+    function hideCalculation() {
+        document.getElementById('calculationModal').style.display = 'none';
+    }
+
+    async function triggerCalculation() {
+        if (!currentEventId) return;
+        hideEventDashboard();
+        const log = document.getElementById('calculation-log');
+        const closeBtn = document.getElementById('calcCloseBtn');
+        log.textContent = '';
+        closeBtn.style.display = 'none';
+        document.getElementById('calculationModal').style.display = 'flex';
+        try {
+            const calcRes = await fetch(`/api/calculate/${currentEventId}`, { method: 'POST' });
+            const reader = calcRes.body.getReader();
+            const decoder = new TextDecoder();
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                log.textContent += decoder.decode(value);
+                log.scrollTop = log.scrollHeight;
             }
-            return true;
+        } catch (err) {
+            log.textContent += `\nError: ${err.message}`;
+        } finally {
+            closeBtn.style.display = 'block';
         }
-        function showCreateGroup() {
-            document.getElementById('createGroupModal').style.display = 'flex';
-        }
-        function hideCreateGroup() {
-            document.getElementById('createGroupModal').style.display = 'none';
-        }
-        function showShareLink(link) {
-            document.getElementById('shareLinkInput').value = link;
-            document.getElementById('shareLinkModal').style.display = 'flex';
-        }
-        function hideShareLink() {
-            document.getElementById('shareLinkModal').style.display = 'none';
-        }
-        function showEventDashboard(event) {
-            document.getElementById('dashEventName').innerText = event.name;
-            document.getElementById('dashEventDates').innerText = `${event.earliest_date} to ${event.latest_date}`;
-            document.getElementById('feedbackCount').innerText = event.feedback_count;
-            document.getElementById('eventDashboardModal').style.display = 'flex';
-        }
-        function hideEventDashboard() {
-            document.getElementById('eventDashboardModal').style.display = 'none';
+    }
+
+    function showFeedbackForm(event) {
+        document.getElementById('feedbackEventName').innerText = event.name;
+        document.getElementById('feedbackEventDates').innerText = `Planning window: ${event.earliest_date} to ${event.latest_date}`;
+        document.getElementById('feedbackFormModal').style.display = 'flex';
+    }
+    function hideFeedbackForm() {
+        document.getElementById('feedbackFormModal').style.display = 'none';
+    }
+
+    async function submitFeedback() {
+        const city = document.getElementById('feedbackCity').value;
+        const start_date = document.getElementById('feedbackStartDate').value;
+        const end_date = document.getElementById('feedbackEndDate').value;
+
+        if (!city || !start_date || !end_date) {
+            alert('Please fill in all fields');
+            return;
         }
 
-        function copyShareLink() {
-            const copyText = document.getElementById("shareLinkInput");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(copyText.value).then(() => {
-                    alert("Link copied to clipboard!");
-                });
+        try {
+            const res = await fetch(`/api/events/${currentEventId}/feedback`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ city, start_date, end_date })
+            });
+            if (res.ok) {
+                alert('Details received — thank you.');
+                hideFeedbackForm();
             } else {
-                document.execCommand("copy");
-                alert("Link copied to clipboard! (fallback)");
+                alert('Failed to submit feedback.');
+            }
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
+    }
+
+    // Check if we are on a group page
+    window.onload = async () => {
+        // Auto-open create modal if redirected with ?create=1
+        if (new URLSearchParams(window.location.search).get('create') === '1') {
+            {% if username %}showCreateGroup();{% endif %}
+        }
+
+        let eventId = '{{ group_id }}';
+
+        if (!eventId || eventId === 'None' || eventId === '') {
+            const pathParts = window.location.pathname.split('/');
+            if (pathParts[1] === 'group' && pathParts[2]) {
+                eventId = pathParts[2];
             }
         }
 
-        async function submitGroup() {
-            const name = document.getElementById('groupName').value;
-            const earliest_date = document.getElementById('earliestDate').value;
-            const latest_date = document.getElementById('latestDate').value;
-
-            if (!name || !earliest_date || !latest_date) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            hideCreateGroup();
+        if (eventId && eventId !== 'None' && eventId !== '') {
+            currentEventId = eventId;
             try {
-                const eventRes = await fetch('/api/events', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, earliest_date, latest_date, details: {} })
-                });
-                const eventData = await eventRes.json();
-                currentEventId = eventData.event_id;
-                const dynamicShareLink = `${window.location.origin}/group/${eventData.event_id}`;
-                showShareLink(dynamicShareLink);
-            } catch (err) {
-                alert("Error creating event: " + err.message);
-            }
-        }
-
-        function hideCalculation() {
-            document.getElementById('calculationModal').style.display = 'none';
-        }
-
-        async function triggerCalculation() {
-            if (!currentEventId) return;
-            hideEventDashboard();
-            const log = document.getElementById('calculation-log');
-            const closeBtn = document.getElementById('calcCloseBtn');
-            log.textContent = '';
-            closeBtn.style.display = 'none';
-            document.getElementById('calculationModal').style.display = 'flex';
-            try {
-                const calcRes = await fetch(`/api/calculate/${currentEventId}`, { method: 'POST' });
-                const reader = calcRes.body.getReader();
-                const decoder = new TextDecoder();
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    log.textContent += decoder.decode(value);
-                    log.scrollTop = log.scrollHeight;
-                }
-            } catch (err) {
-                log.textContent += `\nError: ${err.message}`;
-            } finally {
-                closeBtn.style.display = 'block';
-            }
-        }
-
-        function showFeedbackForm(event) {
-            document.getElementById('feedbackEventName').innerText = `Join ${event.name}`;
-            document.getElementById('feedbackEventDates').innerText = `Planning window: ${event.earliest_date} to ${event.latest_date}`;
-            document.getElementById('feedbackFormModal').style.display = 'flex';
-        }
-        function hideFeedbackForm() {
-            document.getElementById('feedbackFormModal').style.display = 'none';
-        }
-
-        async function submitFeedback() {
-            const city = document.getElementById('feedbackCity').value;
-            const start_date = document.getElementById('feedbackStartDate').value;
-            const end_date = document.getElementById('feedbackEndDate').value;
-
-            if (!city || !start_date || !end_date) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            try {
-                const res = await fetch(`/api/events/${currentEventId}/feedback`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ city, start_date, end_date })
-                });
-                if (res.ok) {
-                    alert('Feedback submitted! Thank you.');
-                    hideFeedbackForm();
-                } else {
-                    alert('Failed to submit feedback.');
-                }
-            } catch (err) {
-                alert('Error: ' + err.message);
-            }
-        }
-
-        // Check if we are on a group page
-        window.onload = async () => {
-            // Auto-open create modal if redirected with ?create=1
-            if (new URLSearchParams(window.location.search).get('create') === '1') {
-                {% if username %}showCreateGroup();{% endif %}
-            }
-
-            let eventId = '{{ group_id }}';
-            
-            if (!eventId || eventId === 'None' || eventId === '') {
-                const pathParts = window.location.pathname.split('/');
-                if (pathParts[1] === 'group' && pathParts[2]) {
-                    eventId = pathParts[2];
-                }
-            }
-
-            if (eventId && eventId !== 'None' && eventId !== '') {
-                currentEventId = eventId;
-                try {
-                    const res = await fetch(`/api/events/${eventId}`);
-                    const event = await res.json();
-                    if (event.name) {
-                        if (event.is_owner) {
-                            showEventDashboard(event);
-                        } else {
-                            showFeedbackForm(event);
-                        }
+                const res = await fetch(`/api/events/${eventId}`);
+                const event = await res.json();
+                if (event.name) {
+                    if (event.is_owner) {
+                        showEventDashboard(event);
+                    } else {
+                        showFeedbackForm(event);
                     }
-                } catch (e) {
-                    console.error("Failed to load event data", e);
                 }
+            } catch (e) {
+                console.error("Failed to load event data", e);
             }
-        };
-    </script>
+        }
+    };
+</script>
 
-    <section class="preview-grid">
-        <div class="container">
-            <div class="section-header">
-                <div>
-                    <h2>Recommended for Distributed Teams</h2>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">Based on optimal flight intersection and cost-of-living.</p>
-                </div>
-                <a href="#" style="color: var(--primary); font-weight: 700; text-decoration: none; font-size: 0.9rem;">View all destinations →</a>
-            </div>
-
-            <div class="grid">
-                <!-- Mock Card 1 -->
-                <div class="city-card">
-                    <div class="score-box">4.9</div>
-                    <div class="city-img" style="background-image: url('https://images.unsplash.com/photo-1513581166391-887a96ddeafd?auto=format&fit=crop&w=600&q=80')">
-                        <div class="city-overlay">
-                            <div class="city-name">Lisbon, Portugal</div>
-                        </div>
-                    </div>
-                    <div class="city-stats">
-                        <div class="stat-row">
-                            <span class="stat-label">Avg. Flight (EU)</span>
-                            <span>€142</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Meeting Score</span>
-                            <span class="badge badge-green">Excellent</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Top Origins</span>
-                            <span>LON, BER, AMS</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mock Card 2 -->
-                <div class="city-card">
-                    <div class="score-box">4.7</div>
-                    <div class="city-img" style="background-image: url('https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=600&q=80')">
-                        <div class="city-overlay">
-                            <div class="city-name">Tallinn, Estonia</div>
-                        </div>
-                    </div>
-                    <div class="city-stats">
-                        <div class="stat-row">
-                            <span class="stat-label">Avg. Flight (EU)</span>
-                            <span>€185</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Meeting Score</span>
-                            <span class="badge badge-blue">Very Good</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Top Origins</span>
-                            <span>HEL, STO, BER</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mock Card 3 -->
-                <div class="city-card">
-                    <div class="score-box">4.8</div>
-                    <div class="city-img" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=80')">
-                        <div class="city-overlay">
-                            <div class="city-name">Mexico City, MX</div>
-                        </div>
-                    </div>
-                    <div class="city-stats">
-                        <div class="stat-row">
-                            <span class="stat-label">Avg. Flight (NA)</span>
-                            <span>$290</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Meeting Score</span>
-                            <span class="badge badge-green">Exceptional</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Top Origins</span>
-                            <span>NYC, LAX, SFO</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="utility-features container">
-        <div class="feature-item">
-            <div class="feature-icon">🏙️</div>
-            <div class="feature-content">
-                <h3>High-Density Coordination</h3>
-                <p>One link to collect everyone's origin, availability, and preferences. No more scrolling through group chats.</p>
-            </div>
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">📊</div>
-            <div class="feature-content">
-                <h3>Data-Driven Decisions</h3>
-                <p>We analyze real-time flight routes and costs to suggest destinations that are genuinely fair for the whole group.</p>
-            </div>
-        </div>
-        <div class="feature-item">
-            <div class="feature-icon">🤝</div>
-            <div class="feature-content">
-                <h3>Built for Community</h3>
-                <p>From company offsites to family reunions, we harmonize the logistics so you can focus on the connection.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 2rem;">
+<section class="preview-grid">
+    <div class="container">
+        <div class="section-header">
             <div>
-                <div class="logo">TAKEOFF<span>CITY</span></div>
-                <p style="margin-top: 1rem;">The coordination layer for group travel.</p>
+                <div class="section-eyebrow">Popular Destinations</div>
+                <h2>Where Groups Like Yours Choose to Meet</h2>
+                <p>Curated by flight accessibility, accommodation quality, and group satisfaction.</p>
             </div>
-            <div class="footer-links">
+            <a href="#">Explore all destinations</a>
+        </div>
+
+        <div class="grid">
+            <!-- Mock Card 1 -->
+            <div class="city-card">
+                <div class="score-box">4.9</div>
+                <div class="city-img" style="background-image: url('https://images.unsplash.com/photo-1513581166391-887a96ddeafd?auto=format&fit=crop&w=600&q=80')">
+                    <div class="city-overlay">
+                        <div class="city-name">Lisbon, Portugal</div>
+                    </div>
+                </div>
+                <div class="city-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Avg. Fare from Europe</span>
+                        <span style="font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text-dim);">€142</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Group Score</span>
+                        <span class="badge badge-green">Excellent</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Flying From</span>
+                        <span style="font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text-muted);">LON · BER · AMS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mock Card 2 -->
+            <div class="city-card">
+                <div class="score-box">4.7</div>
+                <div class="city-img" style="background-image: url('https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=600&q=80')">
+                    <div class="city-overlay">
+                        <div class="city-name">Tallinn, Estonia</div>
+                    </div>
+                </div>
+                <div class="city-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Avg. Fare from Europe</span>
+                        <span style="font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text-dim);">€185</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Group Score</span>
+                        <span class="badge badge-blue">Very Good</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Flying From</span>
+                        <span style="font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text-muted);">HEL · STO · BER</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mock Card 3 -->
+            <div class="city-card">
+                <div class="score-box">4.8</div>
+                <div class="city-img" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=80')">
+                    <div class="city-overlay">
+                        <div class="city-name">Mexico City, MX</div>
+                    </div>
+                </div>
+                <div class="city-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Avg. Fare from N. America</span>
+                        <span style="font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--text-dim);">$290</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Group Score</span>
+                        <span class="badge badge-green">Exceptional</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Flying From</span>
+                        <span style="font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text-muted);">NYC · LAX · SFO</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div style="margin-top: 3rem; color: #999;">
-            &copy; 2026 TakeoffCity. High-density coordination for the modern world.
+    </div>
+</section>
+
+<section class="utility-features">
+    <div class="container">
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">✈️</div>
+                <div class="feature-content">
+                    <h3>Effortless Gathering, Start to Finish</h3>
+                    <p>One private link brings your whole group together. Collect everyone's home city, available dates, and preferences — without a single reply-all thread.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🗺️</div>
+                <div class="feature-content">
+                    <h3>Destinations Chosen with Precision</h3>
+                    <p>We analyze live flight routes and connections from every attendee's home city, surfacing destinations that are genuinely convenient — and fair — for the entire group.</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🥂</div>
+                <div class="feature-content">
+                    <h3>For Occasions That Deserve More</h3>
+                    <p>Company offsites, class reunions, milestone celebrations. Whatever brings your group together, we handle the logistics so you can be fully present for the moment.</p>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <div>
+                <a href="/" class="logo">Takeoff<span>City</span></a>
+                <p>Curated destination matching for groups that expect more.</p>
+            </div>
+        </div>
+        <div class="footer-copy">&copy; 2026 TakeoffCity. Thoughtfully planned gatherings for discerning groups.</div>
+    </div>
+</footer>
 
 </body>
 </html>
